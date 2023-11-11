@@ -1,4 +1,4 @@
-package control_flow
+package list
 
 fun main() {
     val list = arrayListOf<Int>()
