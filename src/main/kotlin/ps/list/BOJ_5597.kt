@@ -1,4 +1,4 @@
-package list
+package ps.list
 
 fun main() {
     val list = arrayListOf<Int>()

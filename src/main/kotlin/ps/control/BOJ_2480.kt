@@ -1,4 +1,4 @@
-package control
+package ps.control
 
 import java.util.StringTokenizer
 

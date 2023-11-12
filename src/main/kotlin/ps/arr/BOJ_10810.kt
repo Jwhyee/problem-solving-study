@@ -1,4 +1,4 @@
-package arr
+package ps.arr
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
