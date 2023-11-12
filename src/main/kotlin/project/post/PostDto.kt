@@ -1,3 +1,5 @@
 package project.post
 
-data class PostDto()
+import java.time.LocalDateTime
+
+data class PostDto(val title:String, val content:String, val date:LocalDateTime)
