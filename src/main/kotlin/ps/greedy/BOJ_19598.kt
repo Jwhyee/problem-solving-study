@@ -6,7 +6,7 @@ import java.util.PriorityQueue
 import java.util.StringTokenizer
 
 /**
- * 문제 이름(난이도) : 최소 회의실 개수(GOL4)
+ * 문제 이름(난이도) : 최소 회의실 개수(GOL5)
  * 시간 : 900 ms
  * 메모리 : 83884 KB
  * 링크 : https://www.acmicpc.net/problem/19598
