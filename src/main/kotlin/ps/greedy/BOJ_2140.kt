@@ -4,7 +4,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 /**
- * 문제 이름(난이도) : 지뢰찾기(GOL5)
+ * 문제 이름(난이도) : 지뢰찾기(GOL4)
  * 시간 : 100 ms
  * 메모리 : 12448 KB
  * 링크 : https://www.acmicpc.net/problem/2140
