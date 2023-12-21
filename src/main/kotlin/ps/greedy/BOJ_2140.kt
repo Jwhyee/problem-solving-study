@@ -20,8 +20,7 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
     for (i in 0 until N) {
         val line = readLine()
         for (j in 0 until N) {
-            val n = line[j]
-            map[i][j] = n
+            map[i][j] = line[j]
         }
     }
 
