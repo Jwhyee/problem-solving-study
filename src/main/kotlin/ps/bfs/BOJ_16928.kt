@@ -14,7 +14,7 @@ import java.util.StringTokenizer
  */
 val cnt = Array(101) { 0 }
 val ladder = Array(101) { 0 }
-val visited = Array(101) { false }
+private val visited = Array(101) { false }
 fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
 
     var st = StringTokenizer(readLine())

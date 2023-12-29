@@ -18,13 +18,11 @@ private lateinit var map: Array<CharArray>
 private lateinit var red: Pair<Int, Int>
 // 파란색 y, x
 private lateinit var blue: Pair<Int, Int>
-// 목표 y, x
-private lateinit var end: Pair<Int, Int>
 
 /**
  * 문제 이름(난이도) : 구슬 탈출3(GOL1)
  * 시간 : 104 ms
- * 메모리 : 13216 KB
+ * 메모리 : 13036 KB
  * 링크 : https://www.acmicpc.net/problem/15644
  */
 fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
@@ -41,7 +39,6 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
             when (cur) {
                 'R' -> red = i to j
                 'B' -> blue = i to j
-                'O' -> end = i to j
             }
         }
     }
@@ -63,7 +60,7 @@ fun go() {
     queue.add(Location(ry, rx, by, bx, 0, ""))
     visited[ry][rx][by][bx] = true
 
-    outer@while (queue.isNotEmpty()) {
+    while (queue.isNotEmpty()) {
         val cur = queue.poll()
         val (cry, crx) = cur.ry to cur.rx
         val (cby, cbx) = cur.by to cur.bx
@@ -86,9 +83,6 @@ fun go() {
         for (i in 0 until 4) {
             var (nry, nrx) = cry to crx
             var (nby, nbx) = cby to cbx
-            var (redFlag, blueFlag) = false to false
-            var (redEndFlag, blueEndFlag) = false to false
-
 
             while (true) {
                 nry += dy[i]
@@ -108,11 +102,11 @@ fun go() {
                     nbx -= dx[i]
                     break
                 }
-                if(isGoal(nby, nbx)) break
+                if (isGoal(nby, nbx)) break
             }
 
             // 파란공만 들어갔다면 통과
-            if(isGoal(nby, nbx)) continue
+            if (isGoal(nby, nbx)) continue
 
             // 빨간공과 파란공의 위치가 같을 경우
             if (nry == nby && nrx == nbx) {
