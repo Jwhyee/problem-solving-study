@@ -7,11 +7,11 @@ import java.util.Queue
 import java.util.StringTokenizer
 import kotlin.math.abs
 
-val dirs = arrayOf("R", "L", "D", "U")
-val dx = arrayOf(1, -1, 0, 0)
-val dy = arrayOf(0, 0, 1, -1)
-var n = 0
-var m = 0
+private val dirs = arrayOf("R", "L", "D", "U")
+private val dx = arrayOf(1, -1, 0, 0)
+private val dy = arrayOf(0, 0, 1, -1)
+private var n = 0
+private var m = 0
 
 private lateinit var map: Array<CharArray>
 // 빨간색 y, x

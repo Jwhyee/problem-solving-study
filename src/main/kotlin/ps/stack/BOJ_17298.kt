@@ -1,16 +1,23 @@
 package ps.stack
 
 import java.util.Stack
+import java.util.StringTokenizer
 
 /**
  * 문제 이름(난이도) : 오큰수(GOL4)
- * 시간 : 1244 ms
- * 메모리 : 308952 KB
+ * 시간 : 1168 ms
+ * 메모리 : 261996 KB
  * 링크 : https://www.acmicpc.net/problem/17298
  */
 fun main() = with(System.`in`.bufferedReader()) {
     val n = readLine().toInt()
-    val list = readLine().split(" ").map { it.toInt() }.toMutableList()
+    val st = StringTokenizer(readLine())
+    val list = mutableListOf<Int>()
+
+    while (st.hasMoreTokens()) {
+        list += st.nextToken().toInt()
+    }
+
     val stack = Stack<Int>()
 
     for (i in 0 until list.size) {
@@ -20,7 +27,7 @@ fun main() = with(System.`in`.bufferedReader()) {
             list[stack.pop()] = list[i]
         }
         // 스택에 인덱스 넣기
-        stack.push(i)
+        stack += i
     }
 
     // 스택에 처리되지 않은 인덱스가 남아있으면, -1로 채우기
