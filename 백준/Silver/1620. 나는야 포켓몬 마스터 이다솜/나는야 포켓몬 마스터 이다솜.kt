@@ -7,20 +7,22 @@ fun main() = with(System.`in`.bufferedReader()) {
 
     val bw = System.out.bufferedWriter()
     val nameMap = hashMapOf<String, Int>()
-    val idxMap = hashMapOf<Int, String>()
+    val list = mutableListOf<String>()
 
-    for (i in 1.. n) {
+    for (i in 1 .. n) {
         val name = readLine()
         nameMap[name] = i
-        idxMap[i] = name
+        list += name
     }
 
-    for (i in 1 .. m) {
+    for (i in 0 until m) {
         val q = readLine()
-        if (q.toIntOrNull() == null) {
-            bw.append("${nameMap[q]}\n")
+        if (q[0].isDigit()) {
+            bw.append(list[q.toInt() - 1])
+            bw.newLine()
         } else {
-            bw.append("${idxMap[q.toInt()]}\n")
+            bw.append("${nameMap[q]}")
+            bw.newLine()
         }
     }
     bw.flush()
