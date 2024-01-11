@@ -6,6 +6,8 @@ private lateinit var map: Array<IntArray>
 private val br = System.`in`.bufferedReader()
 private val virusList = ArrayList<Pair<Int, Int>>()
 private var answer = Int.MAX_VALUE
+private val dx = intArrayOf(1, 0, -1, 0)
+private val dy = intArrayOf(0, 1, 0, -1)
 private val dir = arrayOf(
     arrayOf(0, 1),
     arrayOf(1, 0),
@@ -65,8 +67,8 @@ fun bfs(viruses: IntArray, n: Int, m: Int): Int {
             val (cy, cx) = queue.poll()
 
             for (j in 0 until 4) {
-                val ny = cy + dir[j][0]
-                val nx = cx + dir[j][1]
+                val ny = cy + dy[j]
+                val nx = cx + dx[j]
 
                 if (ny !in 0 until n || nx !in 0 until n) continue
                 if (tempGraph[ny][nx] == 1) continue
