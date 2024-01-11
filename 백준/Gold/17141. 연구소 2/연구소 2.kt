@@ -1,24 +1,26 @@
 import java.util.LinkedList
 import java.util.Queue
+import java.util.StringTokenizer
 
-fun getIntList() = br.readLine().trim().split(' ').map { it.toInt() }
 private lateinit var map: Array<IntArray>
-private val br = System.`in`.bufferedReader()
 private val virusList = ArrayList<Pair<Int, Int>>()
 private var answer = Int.MAX_VALUE
 private val dx = intArrayOf(1, 0, -1, 0)
 private val dy = intArrayOf(0, 1, 0, -1)
-private val dir = arrayOf(
-    arrayOf(0, 1),
-    arrayOf(1, 0),
-    arrayOf(0, -1),
-    arrayOf(-1, 0),
-)
 
-fun main() = with(System.out.bufferedWriter()) {
-    val (n, m) = getIntList()
+fun main() = with(System.`in`.bufferedReader()) {
+    var st = StringTokenizer(readLine())
+    val bw = System.out.bufferedWriter()
+
+    val (n, m) = st.nextToken().toInt() to st.nextToken().toInt()
     map = Array(n) { y ->
-        val list = getIntList()
+        st = StringTokenizer(readLine())
+        val list = mutableListOf<Int>()
+
+        while (st.hasMoreTokens()) {
+            list += st.nextToken().toInt()
+        }
+
         for (x in list.indices) {
             if (list[x] == 2) {
                 virusList.add(Pair(y, x))
@@ -28,7 +30,8 @@ fun main() = with(System.out.bufferedWriter()) {
     }
     combination(IntArray(m), 0, 0, n, m)
 
-    write("${if (answer == Int.MAX_VALUE) -1 else answer}")
+    bw.write("${if (answer == Int.MAX_VALUE) -1 else answer}")
+    bw.close()
     close()
 }
 
