@@ -3,7 +3,7 @@ import java.util.Queue
 import java.util.StringTokenizer
 
 private lateinit var map: Array<IntArray>
-private val virusList = ArrayList<Pair<Int, Int>>()
+private val virusList = mutableListOf<Pair<Int, Int>>()
 private var answer = Int.MAX_VALUE
 private val dx = intArrayOf(1, 0, -1, 0)
 private val dy = intArrayOf(0, 1, 0, -1)
@@ -12,22 +12,22 @@ fun main() = with(System.`in`.bufferedReader()) {
     var st = StringTokenizer(readLine())
     val bw = System.out.bufferedWriter()
 
+    // n, m 입력 받기
     val (n, m) = st.nextToken().toInt() to st.nextToken().toInt()
-    map = Array(n) { y ->
+
+    // 지도 배열 초기화
+    map = Array(n) { IntArray(n) }
+    for (y in 0 until n) {
         st = StringTokenizer(readLine())
-        val list = mutableListOf<Int>()
 
-        while (st.hasMoreTokens()) {
-            list += st.nextToken().toInt()
+        for (x in 0 until n) {
+            val cur = st.nextToken().toInt()
+            map[y][x] = cur
+            if (cur == 2) virusList += (y to x)
         }
-
-        for (x in list.indices) {
-            if (list[x] == 2) {
-                virusList.add(Pair(y, x))
-            }
-        }
-        list.toIntArray()
     }
+
+    // 조합 시작
     combination(IntArray(m), 0, 0, n, m)
 
     bw.write("${if (answer == Int.MAX_VALUE) -1 else answer}")
@@ -38,7 +38,7 @@ fun main() = with(System.`in`.bufferedReader()) {
 fun combination(viruses: IntArray, idx: Int, cnt: Int, n: Int, m: Int) {
 
     if (cnt == m) {
-        answer = answer.coerceAtMost(bfs(viruses, n, m))
+        answer = answer.coerceAtMost(bfs(viruses, n))
         return
     }
 
@@ -48,21 +48,25 @@ fun combination(viruses: IntArray, idx: Int, cnt: Int, n: Int, m: Int) {
     }
 }
 
-fun bfs(viruses: IntArray, n: Int, m: Int): Int {
+fun bfs(viruses: IntArray, n: Int): Int {
     val queue: Queue<Pair<Int, Int>> = LinkedList()
+    // 총 걸린 시간
     var time = 0
-    val tempGraph = Array(n) { y ->
-        IntArray(n) { x ->
-            map[y][x]
-        }
-    }
+
+    // 맵 복사본 생성
+    val mapCopy = map.map { it.clone() }.toTypedArray()
+
+    // 바이러스 리스트를 돌면서 큐에 추가 후 해당 자리는 벽으로 표시
     for (i in viruses) {
         val (y, x) = virusList[i]
         queue.add(virusList[i])
-        tempGraph[y][x] = 1
+        mapCopy[y][x] = 1
     }
-    if (isFinish(tempGraph, n)) return time
+    
+    // 만약 종료 조건에 맞다면 시간 반환
+    if (isFinish(mapCopy, n)) return time
 
+    // BFS 진행
     while (queue.isNotEmpty()) {
         val size = queue.size
         time++
@@ -74,12 +78,12 @@ fun bfs(viruses: IntArray, n: Int, m: Int): Int {
                 val nx = cx + dx[j]
 
                 if (ny !in 0 until n || nx !in 0 until n) continue
-                if (tempGraph[ny][nx] == 1) continue
-                tempGraph[ny][nx] = 1
+                if (mapCopy[ny][nx] == 1) continue
+                mapCopy[ny][nx] = 1
                 queue.add(Pair(ny, nx))
             }
         }
-        if (isFinish(tempGraph, n)) return time
+        if (isFinish(mapCopy, n)) return time
     }
     return Int.MAX_VALUE
 }
