@@ -12,7 +12,7 @@ import java.util.StringTokenizer
 fun main() = with(System.`in`.bufferedReader()) {
     val bw = System.out.bufferedWriter()
     val n = readLine().toInt()
-    val info = HashMap<String, PriorityQueue<Long>>()
+    val info = HashMap<String, PriorityQueue<Int>>()
     var sum = 0L
 
     for (i in 0 until n) {
@@ -24,7 +24,7 @@ fun main() = with(System.`in`.bufferedReader()) {
         // k 또는 b
         val m = st.nextToken().toInt()
         // 내림차순 pq
-        var pq = PriorityQueue<Long> {a, b -> b.toInt() - a.toInt()}
+        var pq = PriorityQueue<Int> {a, b -> b.toInt() - a.toInt()}
 
         // 정보맵에 들어있을 경우 pq 가져오기, 없을 경우 맵에 추가
         if (info.containsKey(name)) {
@@ -36,7 +36,7 @@ fun main() = with(System.`in`.bufferedReader()) {
             // 1 name k c1 c2 .. ck : 이름이 name인 고릴라가 k개의 정보를 얻었으며, 가치는 c1 .. ck
             1 -> {
                 for (idx in 0 until m) {
-                    pq += st.nextToken().toLong()
+                    pq += st.nextToken().toInt()
                 }
             }
             // 2 name b : 호석이가 name인 고릴라에게 b개의 정보를 구매
@@ -61,4 +61,5 @@ fun main() = with(System.`in`.bufferedReader()) {
     }
     bw.append("${sum}\n")
     bw.close()
+    close()
 }

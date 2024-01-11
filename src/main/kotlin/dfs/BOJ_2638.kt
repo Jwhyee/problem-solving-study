@@ -7,8 +7,8 @@ import java.util.StringTokenizer
 var N:Int = 0
 var M:Int = 0
 
-val dx = arrayOf(1, 0, -1, 0)
-val dy = arrayOf(0, 1, 0, -1)
+private val dx = arrayOf(1, 0, -1, 0)
+private val dy = arrayOf(0, 1, 0, -1)
 
 /**
  * 문제 이름(난이도) : 치즈(GOL3)

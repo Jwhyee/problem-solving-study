@@ -12,8 +12,8 @@ import java.util.StringTokenizer
  * 메모리 : 12560 KB
  * 링크 : https://www.acmicpc.net/problem/16928
  */
-val cnt = Array(101) { 0 }
-val ladder = Array(101) { 0 }
+private val cnt = Array(101) { 0 }
+private val ladder = Array(101) { 0 }
 private val visited = Array(101) { false }
 fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
 
@@ -32,7 +32,7 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
     bfs()
 }
 
-fun bfs() {
+private fun bfs() {
     val queue: Queue<Int> = LinkedList()
 
     // 1번 칸부터 진행

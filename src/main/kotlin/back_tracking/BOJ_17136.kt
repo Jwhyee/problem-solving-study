@@ -24,7 +24,7 @@ fun main() = with(System.`in`.bufferedReader()) {
 }
 
 
-fun backTracking(x: Int, y: Int, depth: Int) {
+private fun backTracking(x: Int, y: Int, depth: Int) {
     // 모든 칸 탐색 완료
     if (x >= 10) {
         result = minOf(result, depth)

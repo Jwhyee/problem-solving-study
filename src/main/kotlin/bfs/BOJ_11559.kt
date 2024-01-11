@@ -57,8 +57,8 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
     println(chainingCount)
 }
 
-val dx = intArrayOf(1, 0, -1, 0)
-val dy = intArrayOf(0, 1, 0, -1)
+private val dx = intArrayOf(1, 0, -1, 0)
+private val dy = intArrayOf(0, 1, 0, -1)
 
 fun downBubble(x: Int) {
     for (y in (n - 2) downTo 0) {
