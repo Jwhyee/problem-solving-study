@@ -1,6 +1,4 @@
-import java.util.LinkedList
 import java.util.PriorityQueue
-import java.util.Queue
 import java.util.StringTokenizer
 
 private lateinit var map: Array<IntArray>
@@ -11,11 +9,18 @@ private var m: Int = 0
 
 private data class Pos(val y: Int, val x: Int, val h: Int)
 
+/**
+ * 문제 이름(난이도) : 농장 관리(GOL5)
+ * 시간 : 372 ms
+ * 메모리 : 22364 KB
+ * 링크 : https://www.acmicpc.net/problem/1245
+ */
 fun main() = with(System.`in`.bufferedReader()) {
     var st = StringTokenizer(readLine())
     n = st.nextToken().toInt()
     m = st.nextToken().toInt()
 
+    // 지도 및 방문 배열 초기화
     map = Array(n) { IntArray(m) }
     visited = Array(n) { BooleanArray(m) }
     pq = PriorityQueue {a, b -> b.h - a.h}
@@ -36,41 +41,32 @@ fun main() = with(System.`in`.bufferedReader()) {
         val y = cur.y
         val x = cur.x
         if (!visited[y][x]) {
-            bfs(y, x)
+            dfs(y, x)
             cnt++
         }
 
     }
 
     println(cnt)
-
+    close()
 }
 
 private val dx = intArrayOf(1, 0, -1, 0, -1, -1, 1, 1)
 private val dy = intArrayOf(0, 1, 0, -1, -1, 1, -1, 1)
 
-private fun bfs(y: Int, x: Int) {
-    val queue: Queue<Pair<Int, Int>> = LinkedList()
-    queue += (y to x)
+private fun dfs(y: Int, x: Int) {
+    visited[y][x] = true
 
-    while (queue.isNotEmpty()) {
-        val cur = queue.poll()
-        val cy = cur.first
-        val cx = cur.second
-        visited[cy][cx] = true
-
-        for (i in 0..7) {
-            val ny = cy + dy[i]
-            val nx = cx + dx[i]
-            if (ny in 0 until n && nx in 0 until m) {
-                if (visited[ny][nx].not() && map[ny][nx] != 0) {
-                    val diff = map[cy][cx] - map[ny][nx]
-                    if (diff >= 0) {
-                        queue += (ny to nx)
-                    }
+    for (i in 0..7) {
+        val ny = y + dy[i]
+        val nx = x + dx[i]
+        if (ny in 0 until n && nx in 0 until m) {
+            if (visited[ny][nx].not() && map[ny][nx] != 0) {
+                val diff = map[y][x] - map[ny][nx]
+                if (diff >= 0) {
+                    dfs(ny, nx)
                 }
             }
         }
-
     }
 }
