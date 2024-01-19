@@ -9,14 +9,10 @@ private var m: Int = 0
 
 private data class Pos(val y: Int, val x: Int, val h: Int)
 
-/**
- * 문제 이름(난이도) : 농장 관리(GOL5)
- * 시간 : 372 ms
- * 메모리 : 22364 KB
- * 링크 : https://www.acmicpc.net/problem/1245
- */
-fun main() = with(System.`in`.bufferedReader()) {
-    var st = StringTokenizer(readLine())
+fun main() {
+    val br = System.`in`.bufferedReader()
+    val bw = System.out.bufferedWriter()
+    var st = StringTokenizer(br.readLine())
     n = st.nextToken().toInt()
     m = st.nextToken().toInt()
 
@@ -26,7 +22,7 @@ fun main() = with(System.`in`.bufferedReader()) {
     pq = PriorityQueue {a, b -> b.h - a.h}
 
     for (y in 0 until n) {
-        st = StringTokenizer(readLine())
+        st = StringTokenizer(br.readLine())
         for (x in 0 until m) {
             val h = st.nextToken().toInt()
             map[y][x] = h
@@ -47,8 +43,10 @@ fun main() = with(System.`in`.bufferedReader()) {
 
     }
 
-    println(cnt)
-    close()
+    bw.append("$cnt")
+    bw.flush()
+    bw.close()
+    br.close()
 }
 
 private val dx = intArrayOf(1, 0, -1, 0, -1, -1, 1, 1)
