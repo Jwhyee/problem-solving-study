@@ -3,23 +3,19 @@ import java.util.StringTokenizer
 
 private lateinit var map: Array<IntArray>
 private lateinit var visited: Array<BooleanArray>
-private lateinit var pq: PriorityQueue<Pos>
-private var n: Int = 0
-private var m: Int = 0
-
 private data class Pos(val y: Int, val x: Int, val h: Int)
 
 fun main() {
     val br = System.`in`.bufferedReader()
     val bw = System.out.bufferedWriter()
     var st = StringTokenizer(br.readLine())
-    n = st.nextToken().toInt()
-    m = st.nextToken().toInt()
+    val n = st.nextToken().toInt()
+    val m = st.nextToken().toInt()
 
     // 지도 및 방문 배열 초기화
     map = Array(n) { IntArray(m) }
     visited = Array(n) { BooleanArray(m) }
-    pq = PriorityQueue {a, b -> b.h - a.h}
+    val pq = PriorityQueue<Pos> {a, b -> b.h - a.h}
 
     for (y in 0 until n) {
         st = StringTokenizer(br.readLine())
@@ -37,10 +33,9 @@ fun main() {
         val y = cur.y
         val x = cur.x
         if (!visited[y][x]) {
-            dfs(y, x)
+            dfs(y, x, n, m)
             cnt++
         }
-
     }
 
     bw.append("$cnt")
@@ -52,7 +47,7 @@ fun main() {
 private val dx = intArrayOf(1, 0, -1, 0, -1, -1, 1, 1)
 private val dy = intArrayOf(0, 1, 0, -1, -1, 1, -1, 1)
 
-private fun dfs(y: Int, x: Int) {
+private fun dfs(y: Int, x: Int, n: Int, m: Int) {
     visited[y][x] = true
 
     for (i in 0..7) {
@@ -62,7 +57,7 @@ private fun dfs(y: Int, x: Int) {
             if (visited[ny][nx].not() && map[ny][nx] != 0) {
                 val diff = map[y][x] - map[ny][nx]
                 if (diff >= 0) {
-                    dfs(ny, nx)
+                    dfs(ny, nx, n, m)
                 }
             }
         }
