@@ -60,7 +60,7 @@ fun main() = with(BufferedReader(InputStreamReader(System.`in`))) {
 private val dx = intArrayOf(1, 0, -1, 0)
 private val dy = intArrayOf(0, 1, 0, -1)
 
-fun downBubble(x: Int) {
+private fun downBubble(x: Int) {
     for (y in (n - 2) downTo 0) {
         val cur = map[y][x]
         if (cur != '.') {
@@ -69,7 +69,7 @@ fun downBubble(x: Int) {
     }
 }
 
-fun downDfs(y: Int, x: Int, c: Char) {
+private fun downDfs(y: Int, x: Int, c: Char) {
     val ny = y + 1
     if (ny in 0 until n && map[ny][x] == '.') {
         map[y][x] = '.'
@@ -78,14 +78,14 @@ fun downDfs(y: Int, x: Int, c: Char) {
     }
 }
 
-fun doPop() {
+private fun doPop() {
     while (queue.isNotEmpty()) {
         val cur = queue.poll()
         map[cur.first][cur.second] = '.'
     }
 }
 
-fun dfs(y: Int, x: Int, cnt: Int, color: Char): Int {
+private fun dfs(y: Int, x: Int, cnt: Int, color: Char): Int {
     var count = cnt
     visited[y][x] = true
     queue += (y to x)
