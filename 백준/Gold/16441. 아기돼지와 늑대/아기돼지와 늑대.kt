@@ -2,10 +2,17 @@ import java.util.*
 
 private lateinit var map: Array<CharArray>
 private lateinit var visited: Array<BooleanArray>
-private val queue: Queue<Pair<Int, Int>> = LinkedList()
+private val queue: Queue<Pos> = LinkedList()
 private var n = 0
 private var m = 0
 
+/**
+ * 문제 이름(난이도) : 아기돼지와 늑대(GOL3)
+ * 시간 : 136 ms
+ * 메모리 : 14484 KB
+ * 링크 : https://www.acmicpc.net/problem/16441
+ */
+private data class Pos(val y: Int, val x: Int)
 fun main() {
     val br = System.`in`.bufferedReader()
     val bw = System.out.bufferedWriter()
@@ -22,7 +29,7 @@ fun main() {
         for (x in 0 until m) {
             val cur = arr[x]
             map[y][x] = cur
-            if(cur == 'W') queue += (y to x)
+            if(cur == 'W') queue += Pos(y, x)
         }
     }
 
@@ -48,8 +55,8 @@ private fun bfs() {
     val dy = intArrayOf(0, -1, 0, 1)
     while (queue.isNotEmpty()) {
         val cur = queue.poll()
-        val y = cur.first
-        val x = cur.second
+        val y = cur.y
+        val x = cur.x
 
         visited[y][x] = true
 
@@ -72,7 +79,7 @@ private fun bfs() {
                 // 빙판길을 통해 이동한 좌표에 대해 방문 처리
                 if (stat != '#' && !visited[ny][nx]) {
                     visited[ny][nx] = true
-                    queue += ny to nx
+                    queue += Pos(ny, nx)
                 }
             }
 
