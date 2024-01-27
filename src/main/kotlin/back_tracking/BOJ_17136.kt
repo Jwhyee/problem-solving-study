@@ -2,9 +2,9 @@ package back_tracking
 
 import java.util.StringTokenizer
 
-lateinit var map: Array<Array<Int>>
-val pagerCnt = arrayOf(0, 5, 5, 5, 5, 5)
-var result = Int.MAX_VALUE
+private lateinit var map: Array<Array<Int>>
+private val pagerCnt = arrayOf(0, 5, 5, 5, 5, 5)
+private var result = Int.MAX_VALUE
 
 /**
  * 문제 이름(난이도) : 색종이 붙이기(GOL2)
