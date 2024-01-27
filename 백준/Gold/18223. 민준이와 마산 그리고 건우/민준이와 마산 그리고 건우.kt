@@ -6,7 +6,12 @@ private lateinit var distance: IntArray
 private var v = 0
 private var e = 0
 private var p = 0
-
+/**
+ * 문제 이름(난이도) : 민준이와 마산 그리고 건우(GOL4)
+ * 시간 : 464 ms
+ * 메모리 : 28288 KB
+ * 링크 : https://www.acmicpc.net/problem/18233
+ */
 fun main() = with(System.`in`.bufferedReader()) {
     var st = StringTokenizer(readLine())
     // 정점의 개수
@@ -29,12 +34,20 @@ fun main() = with(System.`in`.bufferedReader()) {
         graph[end] += (start to cost)
     }
 
+    // 출발지로부터 최소 거리 구하기
     dijkstra(1)
+    // 마산까지의 거리
     val len1 = distance[v]
+
+    // 건우까지의 거리
     val len2 = distance[p]
+
+    // 건우의 위치로부터 최소 거리 구하기
     dijkstra(p)
+    // 마산까지의 거리
     val len3 = distance[v]
 
+    // 마산까지의 최소 거리가 건우를 픽업하고, 마산까지 가는 거리의 합과 같을 경우
     if(len1 == (len2 + len3)) println("SAVE HIM")
     else println("GOOD BYE")
     close()
@@ -45,7 +58,7 @@ private fun dijkstra(start: Int) {
     val pq: Queue<Pair<Int, Int>> = PriorityQueue {a, b -> a.second - b.second}
 
     // 거리 배열 최댓값으로 초기화
-    distance = IntArray(v + 1) { Int.MAX_VALUE }
+    distance = IntArray(v + 1) { 10_001 }
 
     // 시작 위치 추가
     pq += (start to 0)
@@ -59,10 +72,13 @@ private fun dijkstra(start: Int) {
         for (next in graph[curNode]) {
             val nextNode = next.first
             val nextCost = next.second
+            // 다음 정점까지의 누적 거리
+            val d = distance[curNode] + nextCost
+            
             // 다음 정점까지 최소 거리가 (현재 정점까지의 최소 거리 + 다음 정점까지의 거리)보다 클 경우
             // 다음 정점 최소 거리 초기화 후 pq에 다음 정점과 그에 대한 최소 거리 추가
-            if (distance[nextNode] > distance[curNode] + nextCost) {
-                distance[nextNode] = distance[curNode] + nextCost
+            if (distance[nextNode] > d) {
+                distance[nextNode] = d
                 pq += (nextNode to distance[nextNode])
             }
         }
