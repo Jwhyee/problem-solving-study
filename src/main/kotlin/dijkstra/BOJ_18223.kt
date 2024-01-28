@@ -12,7 +12,7 @@ private var p = 0
  * 문제 이름(난이도) : 민준이와 마산 그리고 건우(GOL4)
  * 시간 : 420 ms
  * 메모리 : 25376 KB
- * 링크 : https://www.acmicpc.net/problem/18233
+ * 링크 : https://www.acmicpc.net/problem/18223
  */
 fun main() = with(System.`in`.bufferedReader()) {
     val bw = System.out.bufferedWriter()
