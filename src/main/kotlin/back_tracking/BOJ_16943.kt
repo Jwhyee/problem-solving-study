@@ -6,8 +6,8 @@ import kotlin.math.max
 
 /**
  * 문제 이름(난이도) : 숫자 재배치 (SIL1)
- * 시간 : 42620 ms
- * 메모리 : 532 KB
+ * 시간 : 40044 ms
+ * 메모리 : 512 KB
  * 링크 : https://www.acmicpc.net/problem/16943
  */
 private lateinit var visited: BooleanArray
@@ -32,7 +32,7 @@ fun main() = with(System.`in`.bufferedReader()){
 private fun backTracking(depth: Int) {
     if (depth == aSize) {
         val st = sb.toString()
-        if (st.startsWith("0")) {
+        if (st[0] == '0') {
             return
         }
         val result = st.toInt()
@@ -51,7 +51,4 @@ private fun backTracking(depth: Int) {
             visited[i] = false
         }
     }
-
-
-
 }
