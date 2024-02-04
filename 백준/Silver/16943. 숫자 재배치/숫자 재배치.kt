@@ -17,6 +17,7 @@ fun main() = with(System.`in`.bufferedReader()){
     b = st.nextToken().toInt()
     visited = BooleanArray(aSize)
     backTracking(0)
+    close()
     println(max)
 }
 
