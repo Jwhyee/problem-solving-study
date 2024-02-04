@@ -24,7 +24,7 @@ fun main() = with(System.`in`.bufferedReader()){
 private fun backTracking(depth: Int) {
     if (depth == aSize) {
         val st = sb.toString()
-        if (st.startsWith("0")) {
+        if (st[0] == '0') {
             return
         }
         val result = st.toInt()
@@ -43,4 +43,7 @@ private fun backTracking(depth: Int) {
             visited[i] = false
         }
     }
+
+
+
 }
