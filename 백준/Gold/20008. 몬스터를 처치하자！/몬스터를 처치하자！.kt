@@ -4,12 +4,12 @@ fun timeMemo(time: Int, damage: Int, damageMemoList: MutableList<Int>): List<Int
     var idx = 0
     val limit = damageMemoList.size
     while (idx < limit) {
-        if (damageMemoList[idx] == 0) {
-            damageMemoList[idx] = damage
-            idx += time
-        } else {
+        if (damageMemoList[idx] != 0) {
             idx++
+            continue
         }
+        damageMemoList[idx] = damage
+        idx += time
     }
     return damageMemoList
 }
@@ -27,18 +27,18 @@ fun timeCnt(damageMemoList: List<Int>, hp: Int): Int {
     return cnt
 }
 
-fun main() {
-    val (n, hp) = readLine()!!.split(" ").map { it.toInt() }
+fun main() = with(System.`in`.bufferedReader()){
+    val (n, hp) = readLine().split(" ").map { it.toInt() }
 
     var totalDamage = 0
     var totalTime = 0
     val lstTD = mutableListOf<Pair<Int, Int>>()
 
     repeat(n) {
-        val (time, damage) = readLine()!!.split(" ").map { it.toInt() }
+        val (time, damage) = readLine().split(" ").map { it.toInt() }
         totalTime += time
         totalDamage += damage
-        lstTD.add(time to damage)
+        lstTD.add(Pair(time, damage))
     }
 
     val limit = totalTime * ((hp / totalDamage) + 1)
@@ -54,10 +54,11 @@ fun main() {
     }
 
     println(result)
+    close()
 }
 
 fun <T> List<T>.permute(): List<List<T>> =
     if (size == 1) listOf(this)
-    else flatMap { e -> (minus(e).permute()).map { listOf(e) + it } }
+    else flatMap { e -> (minusElement(e).permute()).map { listOf(e) + it } }
 
 fun <T> List<T>.permutations(): List<List<T>> = permute().distinct()
