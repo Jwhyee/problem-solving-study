@@ -1,20 +1,86 @@
+package back_tracking
+
+import java.util.StringTokenizer
 import kotlin.math.min
 
-fun timeMemo(time: Int, damage: Int, damageMemoList: MutableList<Int>): List<Int> {
+private data class Skill(val coolTime: Int, val damage: Int)
+private lateinit var skillList: MutableList<Skill>
+
+fun main() = with(System.`in`.bufferedReader()){
+    var st = StringTokenizer(readLine())
+    val n = st.nextToken().toInt()
+    val hp = st.nextToken().toInt()
+
+    var totalDamage = 0
+    var totalTime = 0
+    skillList = mutableListOf()
+
+    // 각 스킬 정보 입력 받기
+    repeat(n) {
+        st = StringTokenizer(readLine())
+        val time = st.nextToken().toInt()
+        val damage = st.nextToken().toInt()
+        totalTime += time
+        totalDamage += damage
+        skillList.add(Skill(time, damage))
+    }
+
+    // 스킬을 사용할 수 있는 최대 횟수의 최댓값
+    val limit = totalTime * ((hp / totalDamage) + 1)
+
+    // 사용할 스킬 순서에 대한 모든 순열
+    val used = BooleanArray(n) { false }
+    val currentPermutation = mutableListOf<Skill>()
+    val result = IntArray(1) { Int.MAX_VALUE }
+
+    backTracking(used, currentPermutation, limit, hp, result)
+
+    println(result[0])
+    close()
+}
+
+private fun backTracking(
+    used: BooleanArray,
+    currentPermutation: MutableList<Skill>,
+    limit: Int,
+    hp: Int,
+    result: IntArray
+) {
+    if (currentPermutation.size == skillList.size) {
+        val damageList = MutableList(limit) { 0 }
+        for ((t, d) in currentPermutation) {
+            damageList.addAll(timeMemo(t, d, damageList))
+        }
+        result[0] = min(result[0], timeCnt(damageList, hp))
+        return
+    }
+
+    for (i in skillList.indices) {
+        if (!used[i]) {
+            used[i] = true
+            currentPermutation.add(skillList[i])
+            backTracking(used, currentPermutation, limit, hp, result)
+            used[i] = false
+            currentPermutation.removeAt(currentPermutation.size - 1)
+        }
+    }
+}
+
+private fun timeMemo(time: Int, damage: Int, damageList: MutableList<Int>): List<Int> {
     var idx = 0
-    val limit = damageMemoList.size
+    val limit = damageList.size
     while (idx < limit) {
-        if (damageMemoList[idx] != 0) {
+        if (damageList[idx] != 0) {
             idx++
             continue
         }
-        damageMemoList[idx] = damage
+        damageList[idx] = damage
         idx += time
     }
-    return damageMemoList
+    return damageList
 }
 
-fun timeCnt(damageMemoList: List<Int>, hp: Int): Int {
+private fun timeCnt(damageMemoList: List<Int>, hp: Int): Int {
     var cnt = 0
     var remainingHP = hp
     for (damage in damageMemoList) {
@@ -26,39 +92,3 @@ fun timeCnt(damageMemoList: List<Int>, hp: Int): Int {
     }
     return cnt
 }
-
-fun main() = with(System.`in`.bufferedReader()){
-    val (n, hp) = readLine().split(" ").map { it.toInt() }
-
-    var totalDamage = 0
-    var totalTime = 0
-    val lstTD = mutableListOf<Pair<Int, Int>>()
-
-    repeat(n) {
-        val (time, damage) = readLine().split(" ").map { it.toInt() }
-        totalTime += time
-        totalDamage += damage
-        lstTD.add(Pair(time, damage))
-    }
-
-    val limit = totalTime * ((hp / totalDamage) + 1)
-    val permutations = lstTD.permutations()
-    var result = Int.MAX_VALUE
-
-    for (permutation in permutations) {
-        val damageMemoList = MutableList(limit) { 0 }
-        for ((t, d) in permutation) {
-            damageMemoList.addAll(timeMemo(t, d, damageMemoList))
-        }
-        result = min(result, timeCnt(damageMemoList, hp))
-    }
-
-    println(result)
-    close()
-}
-
-fun <T> List<T>.permute(): List<List<T>> =
-    if (size == 1) listOf(this)
-    else flatMap { e -> (minusElement(e).permute()).map { listOf(e) + it } }
-
-fun <T> List<T>.permutations(): List<List<T>> = permute().distinct()
