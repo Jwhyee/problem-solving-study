@@ -4,9 +4,9 @@ import java.util.StringTokenizer
 import kotlin.math.abs
 
 /**
- * 문제 이름(난이도) : A와 B (GOL5)
- * 시간 : 148 ms
- * 메모리 : 17728 KB
+ * 문제 이름(난이도) : 같이 눈사람 만들래? (GOL3)
+ * 시간 : 252 ms
+ * 메모리 : 17532 KB
  * 링크 : https://www.acmicpc.net/problem/20366
  */
 fun main() = with(System.`in`.bufferedReader()) {
