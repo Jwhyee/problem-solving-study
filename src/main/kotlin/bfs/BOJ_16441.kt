@@ -4,7 +4,7 @@ import java.util.*
 
 private lateinit var map: Array<CharArray>
 private lateinit var visited: Array<BooleanArray>
-private val queue: Queue<Pos> = LinkedList()
+private val queue: Queue<Pos1> = LinkedList()
 private var n = 0
 private var m = 0
 
@@ -14,7 +14,7 @@ private var m = 0
  * 메모리 : 14196 KB
  * 링크 : https://www.acmicpc.net/problem/16441
  */
-private data class Pos(val y: Int, val x: Int)
+private data class Pos1(val y: Int, val x: Int)
 fun main() {
     val br = System.`in`.bufferedReader()
     val bw = System.out.bufferedWriter()
@@ -31,7 +31,7 @@ fun main() {
         for (x in 0 until m) {
             val cur = arr[x]
             map[y][x] = cur
-            if(cur == 'W') queue += Pos(y, x)
+            if(cur == 'W') queue += Pos1(y, x)
         }
     }
 
@@ -81,7 +81,7 @@ private fun bfs() {
                 // 빙판길을 통해 이동한 좌표에 대해 방문 처리
                 if (stat != '#' && !visited[ny][nx]) {
                     visited[ny][nx] = true
-                    queue += Pos(ny, nx)
+                    queue += Pos1(ny, nx)
                 }
             }
 
