@@ -52,39 +52,41 @@ fun main() = with(System.`in`.bufferedReader()) {
     val visited = Array(m) { Array(n) { BooleanArray(p) } }
 
     // 공격할 수 있는 플레이어 리스트
-    val attackablePlayer = mutableListOf<Char>()
+    val samePosPlayer = BooleanArray(p)
+    var prefixDamage = 0
+    var result = 0
 
     // bossHp가 0이하로 떨어지면 종료
     while (bossHp > 0) {
-        var size = queue.size
-        println(queue)
-        while (size > 0) {
+        var time = queue.size
+        while (time > 0) {
             val cur = queue.poll()
-            size--
+            val idx = (cur.player - 97).code
+            time--
 
-            if(attackablePlayer.contains(cur.player)) continue
+            if(samePosPlayer[idx]) continue
 
             for (i in 0 until 4) {
                 val nx = cur.x + dx[i]
                 val ny = cur.y + dy[i]
 
                 if (ny in 0 until m && nx in 0 until n) {
-                    val idx = (cur.player - 97).code
                     if (!visited[ny][nx][idx] && (map[ny][nx] != 'X')) {
                         visited[ny][nx][idx] = true
-                        if(map[ny][nx] == 'B') attackablePlayer += cur.player
+                        if(map[ny][nx] == 'B') {
+                            samePosPlayer[idx] = true
+                            prefixDamage += dps[idx]
+                            result++
+                        }
                         else queue += Pos(ny, nx, cur.player)
                     }
                 }
             }
         }
-        for (player in attackablePlayer) {
-            val idx = (player - 97).code
-            bossHp -= dps[idx]
-        }
+        bossHp -= prefixDamage
     }
 
-    println(attackablePlayer.size)
+    println(result)
     close()
 
 }
