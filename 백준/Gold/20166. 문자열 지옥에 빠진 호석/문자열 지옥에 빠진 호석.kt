@@ -3,8 +3,8 @@ import java.util.StringTokenizer
 import kotlin.math.max
 import kotlin.math.min
 
-private val dx = intArrayOf(1, 1, -1, -1, 1, 0, -1, 0)
-private val dy = intArrayOf(1, -1, 1, -1, 0, 1, 0, -1)
+private val dy = intArrayOf(-1, -1, -1, 0, 0, 1, 1, 1)
+private val dx = intArrayOf(-1, 0, 1, -1, 1, -1, 0, 1)
 
 fun main() = with(System.`in`.bufferedReader()) {
    val (n, m, k) = StringTokenizer(readLine()).run {
@@ -48,23 +48,26 @@ fun main() = with(System.`in`.bufferedReader()) {
          val next = nextPos(y, x, i, n, m)
          val ny = next.first
          val nx = next.second
-         if (!visited[ny][nx]) {
-            visited[y][x] = false
-            sb.append(map[ny][nx])
-            backTracking(depth + 1, ny, nx)
-            sb.deleteCharAt(depth)
-            visited[ny][nx] = false
-         }
+         sb.append(map[ny][nx])
+         backTracking(depth + 1, ny, nx)
+         sb.deleteCharAt(depth + 1)
       }
 
    }
 
+   val startsSet = godsLikesString.map { it.key[0] }.toSet()
+
    for (i in 0 until n) {
       for (j in 0 until m) {
-         sb.clear()
-         visited = Array(n) { BooleanArray(m) }
-         sb.append(map[i][j])
-         backTracking(0, i, j)
+         val cur = map[i][j]
+
+         if (startsSet.contains(cur)) {
+            sb.clear()
+            visited = Array(n) { BooleanArray(m) }
+            sb.append(cur)
+            backTracking(0, i, j)
+         }
+
       }
    }
 
@@ -79,16 +82,14 @@ fun main() = with(System.`in`.bufferedReader()) {
    close()
 
 }
-
 private fun nextPos(y: Int, x: Int, dir: Int, n: Int, m: Int): Pair<Int, Int> {
    val nx = x + dx[dir]
    val ny = y + dy[dir]
 
-   // TODO : 수정
 //   println("cur ($ny, $nx)")
-   val cy = if(ny % n < 0) n + (ny % n) else ny % n
-   val cx = if(nx % m < 0) m + (nx % m) else nx % m
-//   println("cal ($my, $mx)")
+   val cy = if(ny < 0) n + (ny % n) else if (ny > n - 1) ny % n else ny
+   val cx = if(nx < 0) m + (nx % m) else if (nx > m - 1) nx % m else nx
+//   println("cal ($cy, $cx)")
 
    return (cy to cx)
 }
