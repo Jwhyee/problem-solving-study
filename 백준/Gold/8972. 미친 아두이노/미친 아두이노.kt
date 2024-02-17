@@ -7,7 +7,7 @@ private lateinit var madRobots: Queue<Robot>
 private lateinit var map: Array<CharArray>
 private val dy = intArrayOf(1, 1, 1, 0, 0, 0, -1, -1, -1)
 private val dx = intArrayOf(-1, 0, 1, -1, 0, 1, -1, 0, 1)
-private data class Robot(var y: Int, var x: Int)
+private class Robot(var y: Int, var x: Int)
 
 fun main() = with(System.`in`.bufferedReader()) {
     val bw = System.out.bufferedWriter()
@@ -87,10 +87,13 @@ private fun moveCrazyRobot(n: Int, m: Int): Boolean {
     val tempMap = Array(n) { IntArray(m) }
 
     val length = madRobots.size
-    val (jsY, jsX) = jsRobot.run { y to x }
+    val jsY = jsRobot.y
+    val jsX = jsRobot.x
 
     for (i in 0 until length) {
-        val (y, x) = madRobots.poll().run { y to x }
+        val cur = madRobots.poll()
+        val y = cur.y
+        val x = cur.x
 
         var minDiff = Int.MAX_VALUE
         var minX = 0
