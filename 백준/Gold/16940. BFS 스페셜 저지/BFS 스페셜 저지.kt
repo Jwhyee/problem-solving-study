@@ -1,21 +1,22 @@
 import java.util.*
 
-class Node (var parent: Int, var children: Int)
+private class Node (var parent: Int, var children: Int)
 
 fun main() = with(System.`in`.bufferedReader()) {
    val n = readLine().toInt()
-   val arr = Array<ArrayList<Int>>(n+1) { ArrayList() }
+   val graph = Array<MutableList<Int>>(n + 1) { mutableListOf() }
 
    repeat(n-1) {
-      val (n1, n2) = StringTokenizer(readLine()).run {
-         nextToken().toInt() to nextToken().toInt()
-      }
+      val st = StringTokenizer(readLine())
+      val n1 = st.nextToken().toInt()
+      val n2 = st.nextToken().toInt()
 
-      arr[n1].add(n2)
-      arr[n2].add(n1)
+      graph[n1].add(n2)
+      graph[n2].add(n1)
    }
 
    val order = mutableListOf<Int>()
+
    val st = StringTokenizer(readLine())
    while (st.hasMoreTokens()) {
       order += st.nextToken().toInt()
@@ -31,7 +32,7 @@ fun main() = with(System.`in`.bufferedReader()) {
    while (!queue.isEmpty()) {
       val cur = queue.poll()
 
-      for (i in arr[cur]) {
+      for (i in graph[cur]) {
          if (!visited[i]) {
             visited[i] = true
             nodes[i].parent = cur
@@ -41,12 +42,15 @@ fun main() = with(System.`in`.bufferedReader()) {
       }
    }
 
+   val bw = System.out.bufferedWriter()
+
    var parent = 1
+   var flag = true
    for (i in 1 until n) {
       val cur = order[i]
       if (parent != nodes[cur].parent) {
-         println(0)
-         return
+         flag = false
+         break
       }
 
       if (nodes[cur].children > 0) queue += cur
@@ -54,5 +58,12 @@ fun main() = with(System.`in`.bufferedReader()) {
       if (nodes[parent].children == 0 && i < n - 1) parent = queue.poll()
    }
 
-   println(1)
+   if(!flag) bw.append("0")
+   else bw.append("1")
+
+   bw.flush()
+   bw.close()
+   close()
+
+
 }
