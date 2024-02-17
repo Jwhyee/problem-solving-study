@@ -41,7 +41,6 @@ fun main() = with(System.`in`.bufferedReader()) {
       }
    }
 
-   val parentQueue: Queue<Int> = LinkedList()
    var parent = 1
    for (i in 1 until n) {
       val cur = order[i]
@@ -50,9 +49,9 @@ fun main() = with(System.`in`.bufferedReader()) {
          return
       }
 
-      if (nodes[cur].children > 0) parentQueue += cur
+      if (nodes[cur].children > 0) queue += cur
       nodes[parent].children--
-      if (nodes[parent].children == 0 && i < n - 1) parent = parentQueue.poll()
+      if (nodes[parent].children == 0 && i < n - 1) parent = queue.poll()
    }
 
    println(1)
