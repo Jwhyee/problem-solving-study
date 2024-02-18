@@ -11,9 +11,9 @@ private class Robot(var y: Int, var x: Int)
 
 fun main() = with(System.`in`.bufferedReader()) {
     val bw = System.out.bufferedWriter()
-    val (n, m) = StringTokenizer(readLine()).run {
-        Pair(nextToken().toInt(), nextToken().toInt())
-    }
+    val st = StringTokenizer(readLine())
+    val n = st.nextToken().toInt()
+    val m = st.nextToken().toInt()
 
     map = Array(n) { CharArray(m) }
     madRobots = LinkedList()
@@ -120,7 +120,6 @@ private fun moveCrazyRobot(n: Int, m: Int): Boolean {
         tempMap[minY][minX] += 1
 
     }
-
 
     // 원래 위치에 있는 종수의 아두이노를 빈 칸으로 만든다.
     map[jsY][jsX] = '.'
