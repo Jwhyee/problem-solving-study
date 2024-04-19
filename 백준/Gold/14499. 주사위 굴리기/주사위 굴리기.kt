@@ -13,6 +13,12 @@ private var dice = Dice()
 private var y = 0
 private var x = 0
 
+/**
+ * 문제 이름(난이도) : 주사위 굴리기(GOL4)
+ * 시간 : 160 ms
+ * 메모리 : 21312 KB
+ * 링크 : https://www.acmicpc.net/problem/14499
+ */
 fun main() = with(System.`in`.bufferedReader()) {
    val st = StringTokenizer(readLine())
    val n = st.nextToken().toInt()
