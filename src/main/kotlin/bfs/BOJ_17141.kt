@@ -56,7 +56,7 @@ fun combination(viruses: IntArray, idx: Int, cnt: Int, n: Int, m: Int) {
     }
 }
 
-fun bfs(viruses: IntArray, n: Int): Int {
+private fun bfs(viruses: IntArray, n: Int): Int {
     val queue: Queue<Pair<Int, Int>> = LinkedList()
     // 총 걸린 시간
     var time = 0
