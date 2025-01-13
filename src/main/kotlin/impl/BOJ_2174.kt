@@ -9,7 +9,7 @@ private data class RobertDowneyJr(
    var dir: Direction = Direction.NORTH
 )
 
-enum class Direction(val c: Char) {
+private enum class Direction(val c: Char) {
    NORTH('N') {
       override fun findNextDirection(order: Char, repeat: Int): Direction {
          val r = repeat % 4
