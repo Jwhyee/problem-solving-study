@@ -23,16 +23,16 @@ private data class Point(var x: Int, var y: Int, var dir: Dir = Dir.DOWN) {
             Dir.RIGHT -> Dir.LEFT
         }
     }
+
+    fun nextPoint() = when(dir) {
+        Dir.UP -> y - 1 to x
+        Dir.DOWN -> y + 1 to x
+        Dir.LEFT -> y to x - 1
+        Dir.RIGHT -> y to x + 1
+    }
 }
 private enum class Dir {
     UP, DOWN, LEFT, RIGHT;
-
-    fun nextPoint(point: Point) = when(this) {
-        UP -> point.y - 1 to point.x
-        DOWN -> point.y + 1 to point.x
-        LEFT -> point.y to point.x - 1
-        RIGHT -> point.y to point.x + 1
-    }
 }
 private lateinit var map: Array<Array<String>>
 private lateinit var lightMap: Array<Array<Boolean>>
@@ -48,7 +48,7 @@ fun main() = with(System.`in`.bufferedReader()) {
     map = Array(n) { Array(n) { "" } }
     lightMap = Array(n) { Array(n) { false } }
 
-    val command = readLine().toCharArray().map { "$it" }.toTypedArray()
+    val command = readLine().toCharArray().map { "$it" }
 
     for (i in 0 until n) {
         val line = readLine().toCharArray().map { "$it" }
@@ -73,7 +73,7 @@ fun main() = with(System.`in`.bufferedReader()) {
     bw.close()
 }
 
-private fun action(command: Array<String>): Boolean {
+private fun action(command: List<String>): Boolean {
     command.forEach { c ->
         when(c) {
             "F" -> {
@@ -101,7 +101,7 @@ private fun action(command: Array<String>): Boolean {
 private fun isRange(y: Int, x: Int) = y in map.indices && x in map[0].indices
 
 private fun move(point: Point, isZombie: Boolean): Boolean {
-    val (ny, nx) = point.dir.nextPoint(point)
+    val (ny, nx) = point.nextPoint()
     if(isRange(ny, nx)) {
         val next = map[ny][nx]
         if(next == "S") {
@@ -140,14 +140,5 @@ private fun turnOnTheLight(y: Int, x: Int) {
         if(isRange(ny, nx)) {
             lightMap[ny][nx] = true
         }
-    }
-}
-
-private fun printMap() {
-    for (i in map.indices) {
-        for (j in map[i].indices) {
-            print(map[i][j])
-        }
-        println()
     }
 }
