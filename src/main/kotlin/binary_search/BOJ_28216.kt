@@ -49,7 +49,10 @@ private fun getResult(items: List<Item>, min: Int, max: Int): Int {
     val startIdx = lowerBound(items, min)
     val endIdx = upperBound(items, max)
 
-    return if(startIdx != 0) {
+    if (startIdx >= items.size || endIdx == 0) return 0
+    if (endIdx > items.size) return items.last().w - if (startIdx > 0) items[startIdx - 1].w else 0
+
+    return if (startIdx != 0) {
         items[endIdx - 1].w - items[startIdx - 1].w
     } else {
         items[endIdx - 1].w
@@ -118,39 +121,31 @@ fun main() = with(System.`in`.bufferedReader()) {
         val minY = minOf(startY, endY)
         val maxY = maxOf(startY, endY)
 
-        println("===========$car[$dir]===========")
-        println("minX = $minX, maxX = $maxX, minY = $minY, maxY = $maxY")
 
-        when (dir) {
+        val r = when (dir) {
             0 -> {
                 yMap[car.y]?.let { items ->
-                    val r = getResult(items, if(minX == car.x) minX + 1 else minX, maxX)
-                    println("r = $r")
-                    result += r
-                }
-            }
-            2 -> {
-                yMap[car.y]?.let { items ->
-                    val r = getResult(items, minX, if(maxX == car.x) maxX - 1 else maxX)
-                    println("r = $r")
-                    result += r
-                }
+                    getResult(items, if(minX == car.x) minX + 1 else minX, maxX)
+                } ?: 0
             }
             1 -> {
                 xMap[car.x]?.let { items ->
-                    val r = getResult(items, if(minY == car.y) minY + 1 else minY, maxY)
-                    println("r = $r")
-                    result += r
-                }
+                    getResult(items, if(minY == car.y) minY + 1 else minY, maxY)
+                } ?: 0
+            }
+            2 -> {
+                yMap[car.y]?.let { items ->
+                    getResult(items, minX, if(maxX == car.x) maxX - 1 else maxX)
+                } ?: 0
             }
             3 -> {
                 xMap[car.x]?.let { items ->
-                    val r = getResult(items, minY, if(maxY == car.y) maxY - 1 else maxY)
-                    println("r = $r")
-                    result += r
-                }
+                    getResult(items, minY, if(maxY == car.y) maxY - 1 else maxY)
+                } ?: 0
             }
+            else -> 0
         }
+        result += r
 
         car.move(dir, moveCnt)
     }
