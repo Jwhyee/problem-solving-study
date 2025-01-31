@@ -59,6 +59,12 @@ private fun getResult(items: List<Item>, min: Int, max: Int): Int {
 private val dx = arrayOf(1, 0, -1, 0)
 private val dy = arrayOf(0, 1, 0, -1)
 
+/**
+ * 문제 이름(난이도) : 아이템 획득 (GOL1)
+ * 시간 : 0 ms
+ * 메모리 : 0 KB
+ * 링크 : https://www.acmicpc.net/problem/28216
+ */
 fun main() = with(System.`in`.bufferedReader()) {
     val (n, q) = StringTokenizer(readLine()).run {
         nextToken().toInt() to nextToken().toInt()
