@@ -1,6 +1,6 @@
 package binary_search
 
-import java.util.StringTokenizer
+import java.util.*
 
 private data class Item(val target: Int, var w: Int)
 
@@ -17,7 +17,6 @@ private fun lowerBound(list: List<Item>, target: Int): Int {
 
     while (left < right) {
         val mid = (left + right) / 2
-
         if (list[mid].target < target) {
             left = mid + 1
         } else {
@@ -34,7 +33,6 @@ private fun upperBound(list: List<Item>, target: Int): Int {
 
     while (left < right) {
         val mid = (left + right) / 2
-
         if (list[mid].target <= target) {
             left = mid + 1
         } else {
@@ -52,54 +50,43 @@ private fun getResult(items: List<Item>, min: Int, max: Int): Int {
     if (startIdx >= items.size || endIdx == 0) return 0
     if (endIdx > items.size) return items.last().w - if (startIdx > 0) items[startIdx - 1].w else 0
 
-    return if (startIdx != 0) {
-        items[endIdx - 1].w - items[startIdx - 1].w
-    } else {
+    return if (startIdx == 0) {
         items[endIdx - 1].w
+    } else {
+        items[endIdx - 1].w - items[startIdx - 1].w
     }
 }
 
 private val dx = arrayOf(1, 0, -1, 0)
 private val dy = arrayOf(0, 1, 0, -1)
 
-/**
- * 문제 이름(난이도) : 아이템 획득 (GOL1)
- * 시간 : 0 ms
- * 메모리 : 0 KB
- * 링크 : https://www.acmicpc.net/problem/28216
- */
 fun main() = with(System.`in`.bufferedReader()) {
     val (n, q) = StringTokenizer(readLine()).run {
         nextToken().toInt() to nextToken().toInt()
     }
 
-    val xMap = mutableMapOf<Int, ArrayList<Item>>()
-    val yMap = mutableMapOf<Int, ArrayList<Item>>()
+    val xMap = mutableMapOf<Int, MutableList<Item>>()
+    val yMap = mutableMapOf<Int, MutableList<Item>>()
 
     repeat(n) {
         val (x, y, w) = StringTokenizer(readLine()).run {
-            Triple(
-                nextToken().toInt(),
-                nextToken().toInt(),
-                nextToken().toInt()
-            )
+            Triple(nextToken().toInt(), nextToken().toInt(), nextToken().toInt())
         }
-        xMap[x] = xMap.getOrDefault(x, arrayListOf()).apply { add(Item(y, w)) }
-        yMap[y] = yMap.getOrDefault(y, arrayListOf()).apply { add(Item(x, w)) }
+        xMap.computeIfAbsent(x) { mutableListOf() }.add(Item(y, w))
+        yMap.computeIfAbsent(y) { mutableListOf() }.add(Item(x, w))
     }
 
+    // 누적 합 계산 (아이템을 빠르게 합산할 수 있도록)
     xMap.forEach { (_, value) ->
         value.sortBy { it.target }
-        value.fold(0) { acc, item ->
-            item.w += acc
-            item.w
+        for (i in 1 until value.size) {
+            value[i].w += value[i - 1].w
         }
     }
     yMap.forEach { (_, value) ->
         value.sortBy { it.target }
-        value.fold(0) { acc, item ->
-            item.w += acc
-            item.w
+        for (i in 1 until value.size) {
+            value[i].w += value[i - 1].w
         }
     }
 
@@ -121,28 +108,19 @@ fun main() = with(System.`in`.bufferedReader()) {
         val minY = minOf(startY, endY)
         val maxY = maxOf(startY, endY)
 
-
         val r = when (dir) {
-            0 -> {
-                yMap[car.y]?.let { items ->
-                    getResult(items, if(minX == car.x) minX + 1 else minX, maxX)
-                } ?: 0
-            }
-            1 -> {
-                xMap[car.x]?.let { items ->
-                    getResult(items, if(minY == car.y) minY + 1 else minY, maxY)
-                } ?: 0
-            }
-            2 -> {
-                yMap[car.y]?.let { items ->
-                    getResult(items, minX, if(maxX == car.x) maxX - 1 else maxX)
-                } ?: 0
-            }
-            3 -> {
-                xMap[car.x]?.let { items ->
-                    getResult(items, minY, if(maxY == car.y) maxY - 1 else maxY)
-                } ?: 0
-            }
+            0 -> yMap[car.y]?.let { items ->
+                getResult(items, if (minX == car.x) minX + 1 else minX, maxX)
+            } ?: 0
+            1 -> xMap[car.x]?.let { items ->
+                getResult(items, if (minY == car.y) minY + 1 else minY, maxY)
+            } ?: 0
+            2 -> yMap[car.y]?.let { items ->
+                getResult(items, minX, if (maxX == car.x) maxX - 1 else maxX)
+            } ?: 0
+            3 -> xMap[car.x]?.let { items ->
+                getResult(items, minY, if (maxY == car.y) maxY - 1 else maxY)
+            } ?: 0
             else -> 0
         }
         result += r
