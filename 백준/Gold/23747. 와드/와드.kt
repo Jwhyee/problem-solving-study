@@ -4,12 +4,18 @@ private val dr = intArrayOf(1, -1, 0, 0)
 private val dc = intArrayOf(0, 0, 1, -1)
 
 fun main() = with(System.`in`.bufferedReader()) {
-    val (r, c) = readLine().split(" ").map { it.toInt() }
+    var st = StringTokenizer(readLine())
+    val (r, c) = st.run {
+        nextToken().toInt() to nextToken().toInt()
+    }
 
     val map = Array(r) { readLine().toCharArray() }
-    val vision = Array(r) { CharArray(c) { '#' } } // 초기값: 다 안 보임
+    val vision = Array(r) { CharArray(c) { '#' } }
 
-    val (hrInit, hcInit) = readLine().split(" ").map { it.toInt() - 1 }
+    st = StringTokenizer(readLine())
+    val (hrInit, hcInit) = st.run {
+        nextToken().toInt() - 1 to nextToken().toInt() - 1
+    }
     var hr = hrInit
     var hc = hcInit
 
