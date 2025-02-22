@@ -2,6 +2,9 @@ package simulation
 
 import java.util.*
 
+private val dr = intArrayOf(1, -1, 0, 0)
+private val dc = intArrayOf(0, 0, 1, -1)
+
 fun main() = with(System.`in`.bufferedReader()) {
     val (r, c) = readLine().split(" ").map { it.toInt() }
 
@@ -25,11 +28,10 @@ fun main() = with(System.`in`.bufferedReader()) {
     }
 
     vision[hr][hc] = '.'
-    val directions = arrayOf(1 to 0, -1 to 0, 0 to 1, 0 to -1)
 
-    for ((dr, dc) in directions) {
-        val rr = hr + dr
-        val cc = hc + dc
+    for (i in 0 until 4) {
+        val rr = hr + dr[i]
+        val cc = hc + dc[i]
 
         if (rr in 0 until r && cc in 0 until c) {
             vision[rr][cc] = '.'
@@ -41,7 +43,6 @@ fun main() = with(System.`in`.bufferedReader()) {
 
 fun ward(nr: Int, nc: Int, map: Array<CharArray>, vision: Array<CharArray>) {
     val area = map[nr][nc]
-    val directions = arrayOf(1 to 0, -1 to 0, 0 to 1, 0 to -1)
     val queue: Queue<Pair<Int, Int>> = ArrayDeque()
 
     vision[nr][nc] = '.'
@@ -50,9 +51,9 @@ fun ward(nr: Int, nc: Int, map: Array<CharArray>, vision: Array<CharArray>) {
     while (queue.isNotEmpty()) {
         val (curR, curC) = queue.poll()
 
-        for ((dr, dc) in directions) {
-            val rr = curR + dr
-            val cc = curC + dc
+        for (i in 0 until 4) {
+            val rr = curR + dr[i]
+            val cc = curC + dc[i]
 
             if (rr !in map.indices || cc !in map[rr].indices) continue
             if (vision[rr][cc] == '.' || map[rr][cc] != area) continue
