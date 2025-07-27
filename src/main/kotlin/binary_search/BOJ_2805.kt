@@ -26,12 +26,10 @@ fun main() = with(System.`in`.bufferedReader()) {
 
         val idx = trees.binarySearch(mid).let {
             if (it >= 0) {
-
                 var pos = it
                 while (pos + 1 < n && trees[pos + 1] == mid) pos++
                 pos + 1
             } else {
-
                 -it - 1
             }
         }
