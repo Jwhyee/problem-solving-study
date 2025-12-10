@@ -2,8 +2,6 @@ import java.util.StringTokenizer
 import kotlin.math.max
 import kotlin.math.min
 
-private const val MAX = 1_000_000_000
-
 fun main() = with(System.`in`.bufferedReader()) {
     val (n, m) = StringTokenizer(readLine()).run {
         nextToken().toInt() to nextToken().toInt()
@@ -17,12 +15,12 @@ fun main() = with(System.`in`.bufferedReader()) {
         time
     }
 
-    println(binarySearch(n, m, max, times))
+    println(binarySearch(m, max, times))
 
     close()
 }
 
-private fun binarySearch(n: Int, m: Int, max: Long, times: LongArray): Long {
+private fun binarySearch(m: Int, max: Long, times: LongArray): Long {
     var left = 0L
     var right = max * m
 
