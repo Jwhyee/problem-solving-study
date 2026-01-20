@@ -1,13 +1,8 @@
 package impl
 
-import java.util.LinkedList
-import java.util.Queue
-import java.util.StringTokenizer
+import java.util.*
 
 private class Sticker(var shape: Array<IntArray>) {
-    var rotateCount = 1
-        private set
-
     var rows: Int = shape.size
     var cols: Int = if (shape.isEmpty()) 0 else shape[0].size
 
@@ -23,8 +18,6 @@ private class Sticker(var shape: Array<IntArray>) {
         shape = newShape
         rows = shape.size
         cols = shape[0].size
-
-        rotateCount += 1
     }
 }
 
@@ -63,10 +56,10 @@ fun main() = with(System.`in`.bufferedReader()) {
                         break
                     }
                 }
-                if(placed) break
+                if (placed) break
             }
 
-            if(placed) break
+            if (placed) break
 
             sticker.rotate()
         }
@@ -78,7 +71,7 @@ fun main() = with(System.`in`.bufferedReader()) {
 private fun canPlace(laptop: Array<IntArray>, sticker: Sticker, i: Int, j: Int): Boolean {
     for (r in 0 until sticker.rows) {
         for (c in 0 until sticker.cols) {
-            if(sticker.shape[r][c] == 1 && laptop[i + r][j + c] == 1) {
+            if (sticker.shape[r][c] == 1 && laptop[i + r][j + c] == 1) {
                 return false
             }
         }
@@ -90,7 +83,7 @@ private fun canPlace(laptop: Array<IntArray>, sticker: Sticker, i: Int, j: Int):
 private fun place(laptop: Array<IntArray>, sticker: Sticker, i: Int, j: Int) {
     for (r in 0 until sticker.rows) {
         for (c in 0 until sticker.cols) {
-            if(sticker.shape[r][c] == 1) {
+            if (sticker.shape[r][c] == 1) {
                 laptop[i + r][j + c] = 1
             }
         }
