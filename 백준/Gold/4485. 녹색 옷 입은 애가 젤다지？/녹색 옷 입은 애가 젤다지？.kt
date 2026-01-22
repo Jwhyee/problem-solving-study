@@ -1,11 +1,8 @@
 import java.util.PriorityQueue
 import java.util.StringTokenizer
 
-private data class Link(
-    val y: Int, val x: Int, val blackRupoor: Int
-)
-
 fun main() = with(System.`in`.bufferedReader()){
+    val bw = System.out.bufferedWriter()
     var i = 1
     while(true) {
         val n = readLine().toInt()
@@ -17,8 +14,12 @@ fun main() = with(System.`in`.bufferedReader()){
             IntArray(n) { st.nextToken().toInt() }
         }
 
-        println("Problem ${i++}: ${dijkstra(map, n)}")
+        bw.write("Problem ${i++}: ${dijkstra(map, n)}")
+        bw.newLine()
     }
+    bw.flush()
+    bw.close()
+    close()
 }
 
 private val dx = intArrayOf(0, 1, 0, -1)
@@ -28,11 +29,11 @@ private fun dijkstra(
     map: Array<IntArray>,
     n: Int
 ): Int {
-    val pq = PriorityQueue<Link>(compareBy { it.blackRupoor })
+    val pq = PriorityQueue<Triple<Int, Int, Int>>(compareBy { it.third })
 
     val min = Array(n) { IntArray(n) { Int.MAX_VALUE } }
 
-    pq.add(Link(0, 0, map[0][0]))
+    pq.add(Triple(0, 0, map[0][0]))
 
     while (pq.isNotEmpty()) {
         val (curY, curX, totalBlackRupoor) = pq.poll()
@@ -49,7 +50,7 @@ private fun dijkstra(
 
                 if (min[ny][nx] > nextTotalBlackRupoor) {
                     min[ny][nx] = nextTotalBlackRupoor
-                    pq.add(Link(ny, nx, nextTotalBlackRupoor))
+                    pq.add(Triple(ny, nx, nextTotalBlackRupoor))
                 }
             }
         }
