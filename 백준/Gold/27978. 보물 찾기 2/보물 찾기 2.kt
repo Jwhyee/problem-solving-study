@@ -1,4 +1,4 @@
-import java.util.PriorityQueue
+import java.util.ArrayDeque
 import java.util.StringTokenizer
 
 private const val SEA = '.'
@@ -52,17 +52,17 @@ private fun dijkstra(
     val dy = intArrayOf(-1, -1, 0, 1, 1, 1, 0, -1)
     val dx = intArrayOf(0, 1, 1, 1, 0, -1, -1, -1)
 
-    val pq = PriorityQueue<State>(compareBy { it.cost })
+    val deque = ArrayDeque<State>()
     val minCost = Array(h) { IntArray(w) { Int.MAX_VALUE } }
 
     val (entryY, entryX) = info[0]
     val (treasureY, treasureX) = info[1]
 
     minCost[entryY][entryX] = 0
-    pq.add(State(entryY, entryX, 0))
+    deque.add(State(entryY, entryX, 0))
 
-    while (pq.isNotEmpty()) {
-        val (y, x, cost) = pq.poll()
+    while (deque.isNotEmpty()) {
+        val (y, x, cost) = deque.removeFirst()
 
         if (cost > minCost[y][x]) {
             continue
@@ -85,7 +85,11 @@ private fun dijkstra(
 
                 if (minCost[ny][nx] > nextCost) {
                     minCost[ny][nx] = nextCost
-                    pq.add(State(ny, nx, nextCost))
+                    if (add == 0) {
+                        deque.addFirst(State(ny, nx, nextCost))
+                    } else {
+                        deque.addLast(State(ny, nx, nextCost))
+                    }
                 }
             }
         }
