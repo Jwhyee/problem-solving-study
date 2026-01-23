@@ -1,75 +1,71 @@
 import java.util.PriorityQueue
 import java.util.StringTokenizer
 
-private data class Network(
-    val to: Int, val cost: Int
-)
+private class Node2(val idx: Int, val cost: Int) : Comparable<Node2> {
+    override fun compareTo(other: Node2): Int {
+        return this.cost - other.cost
+    }
+}
 
 fun main() = with(System.`in`.bufferedReader()) {
-    val sb = StringBuilder()
-
     val (n, m) = StringTokenizer(readLine()).run {
         nextToken().toInt() to nextToken().toInt()
     }
 
-    val networks = Array(n + 1) { arrayListOf<Network>() }
+    val networks = Array(n + 1) { ArrayList<Node2>() }
 
     repeat(m) {
         val st = StringTokenizer(readLine())
+        val u = st.nextToken().toInt()
+        val v = st.nextToken().toInt()
+        val w = st.nextToken().toInt()
 
-        val computer1 = st.nextToken().toInt()
-        val computer2 = st.nextToken().toInt()
-        val weight = st.nextToken().toInt()
-
-        networks[computer1].add(Network(computer2, weight))
-        networks[computer2].add(Network(computer1, weight))
+        networks[u].add(Node2(v, w))
+        networks[v].add(Node2(u, w))
     }
 
     val prev = IntArray(n + 1) { 0 }
 
     dijkstra(networks, prev, n)
 
-    sb.append(n - 1).append("\n")
+    val sb = StringBuilder()
+    sb.append(n - 1).append('\n')
 
     for (node in 2..n) {
-        sb.append("$node ${prev[node]}").append("\n")
+        sb.append(node).append(' ').append(prev[node]).append('\n')
     }
-
-    println(sb)
+    print(sb)
 
     close()
 }
 
 private fun dijkstra(
-    networks: Array<ArrayList<Network>>,
+    networks: Array<ArrayList<Node2>>,
     prev: IntArray,
     n: Int
-): Int {
-    // to, cost
-    val pq = PriorityQueue<Pair<Int, Int>>(compareBy { it.second })
-    val dist = Array(n + 1) { Int.MAX_VALUE }
-    dist[1] = 0
+) {
+    val pq = PriorityQueue<Node2>()
+    val dist = IntArray(n + 1) { Int.MAX_VALUE }
 
-    pq.add(1 to 0)
+    dist[1] = 0
+    pq.add(Node2(1, 0))
 
     while (pq.isNotEmpty()) {
-        val (curNode, curCost) = pq.poll()
+        val cur = pq.poll()
+        val curNode = cur.idx
+        val curCost = cur.cost
 
         if (dist[curNode] < curCost) continue
 
-        val networkList = networks[curNode]
-
-        for ((nextNode, cost) in networkList) {
-            val nextCost = curCost + cost
+        for (next in networks[curNode]) {
+            val nextNode = next.idx
+            val nextCost = curCost + next.cost
 
             if (dist[nextNode] > nextCost) {
-                prev[nextNode] = curNode
-
                 dist[nextNode] = nextCost
-                pq.add(nextNode to nextCost)
+                prev[nextNode] = curNode
+                pq.add(Node2(nextNode, nextCost))
             }
         }
     }
-
-    return -1
 }
