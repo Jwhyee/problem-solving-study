@@ -6,7 +6,7 @@ private data class Network(
 )
 
 fun main() = with(System.`in`.bufferedReader()) {
-    val bw = System.out.bufferedWriter()
+    val sb = StringBuilder()
 
     val (n, m) = StringTokenizer(readLine()).run {
         nextToken().toInt() to nextToken().toInt()
@@ -29,16 +29,13 @@ fun main() = with(System.`in`.bufferedReader()) {
 
     dijkstra(networks, prev, n)
 
-    bw.write("${n - 1}")
-    bw.newLine()
+    sb.append(n - 1).append("\n")
 
     for (node in 2..n) {
-        bw.write("$node ${prev[node]}")
-        bw.newLine()
+        sb.append("$node ${prev[node]}").append("\n")
     }
 
-    bw.flush()
-    bw.close()
+    println(sb)
 
     close()
 }
