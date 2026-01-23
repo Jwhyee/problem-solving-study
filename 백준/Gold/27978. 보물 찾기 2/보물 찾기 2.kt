@@ -40,17 +40,7 @@ fun main() = with(System.`in`.bufferedReader()) {
     close()
 }
 
-private data class Ship(
-    val y: Int,
-    val x: Int,
-    val dir: Int,
-    val totalCost: Int
-) {
-    fun useFuelToNextDir(index: Int) = when (index) {
-        1, 2, 3 -> false
-        else -> true
-    }
-}
+private data class State(val y: Int, val x: Int, val cost: Int)
 
 private fun dijkstra(
     map: Array<CharArray>,
@@ -62,49 +52,43 @@ private fun dijkstra(
     val dy = intArrayOf(-1, -1, 0, 1, 1, 1, 0, -1)
     val dx = intArrayOf(0, 1, 1, 1, 0, -1, -1, -1)
 
-    val pq = PriorityQueue<Ship>(compareBy { it.totalCost })
-    val minCost = Array(h) { Array(w) { IntArray(8) { Int.MAX_VALUE } } }
+    val pq = PriorityQueue<State>(compareBy { it.cost })
+    val minCost = Array(h) { IntArray(w) { Int.MAX_VALUE } }
 
     val (entryY, entryX) = info[0]
-    for (dir in 0 until 8) {
-        val ny = entryY + dy[dir]
-        val nx = entryX + dx[dir]
+    val (treasureY, treasureX) = info[1]
 
-        if (ny in 0 until h && nx in 0 until w) {
-            val next = map[ny][nx]
-            when (next) {
-                SEA, TREASURE -> pq.add(Ship(entryY, entryX, dir, 0))
-            }
-        }
-    }
+    minCost[entryY][entryX] = 0
+    pq.add(State(entryY, entryX, 0))
 
     while (pq.isNotEmpty()) {
-        val ship = pq.poll()
-        val (y, x, dir, totalCost) = ship
+        val (y, x, cost) = pq.poll()
 
-        if (minCost[y][x][dir] < totalCost) continue
-        if (map[y][x] == TREASURE) return totalCost
+        if (cost > minCost[y][x]) {
+            continue
+        }
 
-        for (nextDir in 0 until 8) {
-            val ny = y + dy[nextDir]
-            val nx = x + dx[nextDir]
+        if (y == treasureY && x == treasureX) {
+            return cost
+        }
 
-            if (ny in 0 until h && nx in 0 until w) {
-                val next = map[ny][nx]
-                when (next) {
-                    SEA, TREASURE -> {
-                        val add = if (ship.useFuelToNextDir(nextDir)) 1 else 0
-                        val nextCost = totalCost + add
-                        if (minCost[ny][nx][dir] > nextCost) {
-                            minCost[ny][nx][dir] = nextCost
-                            pq.add(Ship(ny, nx, dir, nextCost))
-                        }
-                    }
+        for (dir in 0 until 8) {
+            val ny = y + dy[dir]
+            val nx = x + dx[dir]
+
+            if (ny in 0 until h && nx in 0 until w && map[ny][nx] != REEF) {
+                val add = when (dir) {
+                    1, 2, 3 -> 0
+                    else -> 1
                 }
-                ship.useFuelToNextDir(nextDir)
+                val nextCost = cost + add
+
+                if (minCost[ny][nx] > nextCost) {
+                    minCost[ny][nx] = nextCost
+                    pq.add(State(ny, nx, nextCost))
+                }
             }
         }
     }
-
     return -1
 }
