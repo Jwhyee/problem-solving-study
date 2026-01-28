@@ -12,33 +12,43 @@ private data class Seat(
 
 fun main() = with(System.`in`.bufferedReader()) {
     val n = readLine().toInt()
-    val preferenceGraph = Array(n * n) { IntArray(5) { 0 } }
-    val sortedGraph = Array(n * n) { IntArray(5) { 0 } }
+    val preferenceGraph = IntArray(n * n) { 0 }
+    val sortedGraph = Array(n * n) { BooleanArray(n * n + 1) { false } }
 
     repeat(n * n) {
         val st = StringTokenizer(readLine())
-        preferenceGraph[it] = IntArray(5) { st.nextToken().toInt() }
-        sortedGraph[preferenceGraph[it][0] - 1] = preferenceGraph[it]
+
+        val target = st.nextToken().toInt()
+        val index = target - 1
+        val s1 = st.nextToken().toInt()
+        val s2 = st.nextToken().toInt()
+        val s3 = st.nextToken().toInt()
+        val s4 = st.nextToken().toInt()
+
+        preferenceGraph[it] = target
+
+        sortedGraph[index][s1] = true
+        sortedGraph[index][s2] = true
+        sortedGraph[index][s3] = true
+        sortedGraph[index][s4] = true
     }
 
     val classroom = Array(n) { IntArray(n) { 0 } }
 
-    preferenceGraph.forEachIndexed { index, preferences ->
-        val student = preferences[0]
-        val (r, c) = targetPosition(n, preferences.sliceArray(1..4), classroom)
+    for (student in preferenceGraph) {
+        val preferences = sortedGraph[student - 1]
+        val (r, c) = targetPosition(n, preferences, classroom)
 
         classroom[r][c] = student
     }
-
+    
     var sum = 0
 
     for (row in 0 until n) {
         for (col in 0 until n) {
             var point = 0
             val currentStudent = classroom[row][col]
-            val preferences = sortedGraph[currentStudent - 1].sliceArray(1..4)
-
-//            println("preferences[$currentStudent] = ${preferences.joinToString()}")
+            val preferences = sortedGraph[currentStudent - 1]
 
             for (dir in 0..3) {
                 val ny = row + dy[dir]
@@ -46,7 +56,7 @@ fun main() = with(System.`in`.bufferedReader()) {
 
                 if(ny in 0 until n && nx in 0 until n) {
                     val target = classroom[ny][nx]
-                    if (target in preferences) {
+                    if (preferences[target]) {
                         point++
                     }
                 }
@@ -62,13 +72,12 @@ fun main() = with(System.`in`.bufferedReader()) {
         }
     }
 
-//    println(classroom.joinToString("\n") { it.joinToString() })
     println(sum)
 }
 
 private fun targetPosition(
     n: Int,
-    preferences: IntArray,
+    preferences: BooleanArray,
     classroom: Array<IntArray>
 ): Pair<Int, Int> {
     val possibles = arrayListOf<Seat>()
@@ -92,7 +101,9 @@ private fun targetPosition(
 
                     if (target == 0) emptyCount++
                     else {
-                        if (target in preferences) favoriteCount++
+                        if (preferences[target]) {
+                            favoriteCount++
+                        }
                     }
                 }
             }
