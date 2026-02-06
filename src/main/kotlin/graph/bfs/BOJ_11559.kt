@@ -7,9 +7,9 @@ import java.util.LinkedList
 
 private const val n = 12
 private const val m = 6
-private val map = Array(_root_ide_package_.graph.bfs.n) { CharArray(_root_ide_package_.graph.bfs.m) }
+private val map = Array(n) { CharArray(m) }
 private val queue: Queue<Pair<Int, Int>> = LinkedList()
-private var visited = Array(_root_ide_package_.graph.bfs.n) { BooleanArray(_root_ide_package_.graph.bfs.m) }
+private var visited = Array(n) { BooleanArray(m) }
 
 /**
  * 문제 이름(난이도) : Puyo Puyo(GOL4)

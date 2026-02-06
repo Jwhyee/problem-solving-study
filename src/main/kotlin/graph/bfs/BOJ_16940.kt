@@ -2,7 +2,7 @@ package graph.bfs
 
 import java.util.*
 
-private class Node (var parent: Int, var children: Int)
+private class Node1 (var parent: Int, var children: Int)
 
 /**
  * 문제 이름(난이도) : BFS 스페셜 저지 (GOL3)
@@ -31,7 +31,7 @@ fun main() = with(System.`in`.bufferedReader()) {
    }
 
    val queue: Queue<Int> = LinkedList()
-   val nodes = Array(n + 1) { Node(0, 0) }
+   val nodes = Array(n + 1) { Node1(0, 0) }
    val visited = BooleanArray(n + 1)
 
    queue += 1

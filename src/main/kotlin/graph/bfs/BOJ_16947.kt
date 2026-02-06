@@ -40,7 +40,7 @@ private fun bfs(
 ): Int {
     val q: Queue<Node> = LinkedList()
     val visited = BooleanArray(n + 1)
-    q.add(_root_ide_package_.bfs.Node(node, 0))
+    q.add(Node(node, 0))
     visited[node] = true
 
     while (!q.isEmpty()) {
@@ -51,7 +51,7 @@ private fun bfs(
             val next: Int = list[current.v][i]
             if (!visited[next]) {
                 visited[next] = true
-                q.add(_root_ide_package_.bfs.Node(next, current.count + 1))
+                q.add(Node(next, current.count + 1))
             }
         }
     }
