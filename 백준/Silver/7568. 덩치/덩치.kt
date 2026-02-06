@@ -1,41 +1,37 @@
 import java.util.StringTokenizer
 
-private data class Person(
-    val id: Int,
-    val weight: Int,
-    val height: Int
-)
-
 fun main() = with(System.`in`.bufferedReader()) {
+    val sb = StringBuilder()
+
     val n = readLine().toInt()
 
-    val people = Array(n) { Person(0, 0, 0) }
+    val people = Array(n) { IntArray(2) { 0 } }
 
     repeat(n) { index ->
         val (weight, height) = StringTokenizer(readLine()).run {
             nextToken().toInt() to nextToken().toInt()
         }
 
-        people[index] = Person(index + 1, weight, height)
+        people[index][0] = weight
+        people[index][1] = height
     }
-
-    val ranking = IntArray(n) { Int.MAX_VALUE }
 
     for (i in 0 until n) {
         var rank = 1
 
         val base = people[i]
-        val baseIndex = base.id - 1
 
         for (j in 0 until n) {
             if(i == j) continue
             val target = people[j]
 
-            if (base.weight < target.weight && base.height < target.height) rank++
+            if (base[0] < target[0] && base[1] < target[1]) rank++
         }
 
-        ranking[baseIndex] = rank
+        sb.append("$rank ")
     }
 
-    println(ranking.joinToString(" "))
+    println(sb)
+
+    close()
 }
