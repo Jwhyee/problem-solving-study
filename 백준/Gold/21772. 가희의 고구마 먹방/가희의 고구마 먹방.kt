@@ -15,19 +15,21 @@ fun main() = with(System.`in`.bufferedReader()) {
     c = st.nextToken().toInt()
     t = st.nextToken().toInt()
 
-    map = Array(r) { CharArray(c) }
-
     var gy = 0
     var gx = 0
 
-    for (y in 0 until r) {
-        val arr = readLine().toCharArray()
-        for (x in 0 until c) {
-            val cur = arr[x]
-            map[y][x] = cur
-            if (cur == 'G') {
-                gy = y
-                gx = x
+    map = Array(r) { y ->
+        val lines = readLine().toCharArray()
+        CharArray(c) { x ->
+            when (val cur = lines[x]) {
+                'G' -> {
+                    gy = y
+                    gx = x
+                    '.'
+                }
+                else -> {
+                    cur
+                }
             }
         }
     }
@@ -43,7 +45,11 @@ private fun backTracking(depth: Int, cnt: Int, y: Int, x: Int) {
         max = max(max, cnt)
         return
     }
-    
+
+    if (cnt + (t - depth) <= max) {
+        return
+    }
+
     for (i in 0 until 5) {
         val ny = y + dy[i]
         val nx = x + dx[i]
@@ -55,7 +61,7 @@ private fun backTracking(depth: Int, cnt: Int, y: Int, x: Int) {
                 backTracking(depth + 1, cnt + 1, ny, nx)
                 map[ny][nx] = 'S'
             } else {
-                backTracking(depth + 1, cnt, ny, nx)   
+                backTracking(depth + 1, cnt, ny, nx)
             }
         }
     }
