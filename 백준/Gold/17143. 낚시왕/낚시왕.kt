@@ -3,7 +3,6 @@ import java.util.StringTokenizer
 import kotlin.math.abs
 
 private data class Shark(
-    var id: Char,
     var y: Int,
     var x: Int,
     val s: Int,
@@ -54,7 +53,7 @@ private data class Shark(
         return this
     }
 
-    override fun toString() = "Shark(id=$id,y=$y,x=$x,s=$s,d=$d,z=$z)"
+    override fun toString() = "Shark(y=$y,x=$x,s=$s,d=$d,z=$z)"
 }
 
 private val dy = intArrayOf(-1, 1, 0, 0)
@@ -67,7 +66,6 @@ fun main() = with(System.`in`.bufferedReader()) {
 
     var sharks = Array(c) { PriorityQueue<Shark>() }
 
-    var id = 'A'
     repeat(m) {
         val st = StringTokenizer(readLine())
 
@@ -80,16 +78,14 @@ fun main() = with(System.`in`.bufferedReader()) {
         val d = st.nextToken().toInt() - 1
         val z = st.nextToken().toInt()
 
-        sharks[c].add(Shark(id + it, r, c, s, d, z))
+        sharks[c].add(Shark(r, c, s, d, z))
     }
 
     var answer = 0
 
     for (kingPosition in 0 until c) {
         val caught = fishing(sharks[kingPosition])
-        answer += caught?.let {
-            it.z
-        } ?: 0
+        answer += caught?.z ?: 0
         sharks = moveSharks(sharks, r, c)
     }
 
