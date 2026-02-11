@@ -1,155 +1,91 @@
 package impl.simulation
 
-import java.util.*
+import java.util.StringTokenizer
+import kotlin.math.max
 
-// 상어 0, 0으로 이동 -> 물고기 이동
-// 상어는 방향에 있는 칸으로 이동 가능 -> 여러 칸도 이동 가능
-// 물고기가 있는 칸으로 이동할 경우, 그 칸의 물고기를 먹고 방향을 가지게 된다.
-// 단, 이동 중에 지나가는 칸에 있는 물고기는 먹지 않음
-// 물고기가 없는 칸으로 이동 불가
-// 이동할 칸이 없으면, 끝
+private data class Fish(val id: Int, var y: Int, var x: Int, var dir: Int) {
+    fun move(map: Array<Array<Fish?>>, sy: Int, sx: Int) {
+        repeat(8) {
+            val ny = y + dy[dir]
+            val nx = x + dx[dir]
 
-private class Fish(
-    val id: Int,
-    var y: Int,
-    var x: Int,
-    var dir: Int
-) {
-    /**
-     * 물고기의 이동 -> 한 칸 이동 가능하며, 번호가 작은 순서
-     * 이동 가능 : 물고기는 빈 칸 || 다른 물고기가 있는 칸
-     * 이동 불가 : 상어가 있는 칸 || 공간의 경계를 넘는 칸
-     * 다른 물고기가 있는 칸으로 이동할 경우, 서로의 위치를 바꿈
-     * */
-    private fun move(y: Int, x: Int) {
-        this.y = y
-        this.x = x
-    }
+            if (ny in 0 until 4 && nx in 0 until 4 && !(ny == sy && nx == sx)) {
+                map[ny][nx]?.let { target ->
+                    target.y = y
+                    target.x = x
+                }
 
-    fun swap(map: Array<Array<Fish?>>, sy: Int, sx: Int) {
-        var count = 0
-        while (true) {
-            if (count == 8) break
-            if (canMove(sy, sx)) {
-                val ny = y + dy[dir]
-                val nx = x + dx[dir]
-
-                val nextFish = map[ny][nx]
-
-                map[y][x] = nextFish
+                map[y][x] = map[ny][nx]
                 map[ny][nx] = this
 
-                nextFish?.move(y, x)
-                move(ny, nx)
-
-                break
-            } else {
-                turn()
+                this.y = ny
+                this.x = nx
+                return
             }
-            count++
+
+            dir = (dir + 1) % 8
         }
     }
-
-    private fun canMove(sy: Int, sx: Int): Boolean {
-        val ny = y + dy[dir]
-        val nx = x + dx[dir]
-
-        if (ny == sy && nx == sx) return false
-
-        return ny in 0 until n && nx in 0 until n
-    }
-
-    private fun turn() {
-        val nextDir = dir + 1
-        dir = if (nextDir == 8) 0 else nextDir
-    }
-
-    fun copy() = Fish(id, y, x, dir)
 }
 
-private class YouthShark(
-    var y: Int,
-    var x: Int,
-    var dir: Int,
-    var score: Int
-)
+private data class YouthShark(val y: Int, val x: Int, val dir: Int, val score: Int)
 
-// ↑, ↖, ←, ↙, ↓, ↘, →, ↗
 private val dy = intArrayOf(-1, -1, 0, 1, 1, 1, 0, -1)
 private val dx = intArrayOf(0, -1, -1, -1, 0, 1, 1, 1)
 
-private const val n = 4
 private var maxScore = 0
 
 fun main() = with(System.`in`.bufferedReader()) {
-    val fishes: Array<Fish?> = Array(17) { null }
-    val map: Array<Array<Fish?>> = Array(4) { y ->
+    val map = Array(4) { Array<Fish?>(4) { null } }
+    val fishes = Array<Fish?>(17) { null }
+
+    for (i in 0 until 4) {
         val st = StringTokenizer(readLine())
-        Array(4) { x ->
+        for (j in 0 until 4) {
             val id = st.nextToken().toInt()
             val dir = st.nextToken().toInt() - 1
-            val fish = Fish(id, y, x, dir)
+            val fish = Fish(id, i, j, dir)
+            map[i][j] = fish
             fishes[id] = fish
-            fish
         }
     }
 
-    backTracking(map, fishes, YouthShark(0, 0, 0, 0))
+    val firstFish = map[0][0]!!
+    val startScore = firstFish.id
+    val startDir = firstFish.dir
 
+    map[0][0] = null
+    fishes[firstFish.id] = null
+
+    dfs(map, fishes, YouthShark(0, 0, startDir, startScore))
     println(maxScore)
-
-    close()
 }
 
-private fun backTracking(map: Array<Array<Fish?>>, fishes: Array<Fish?>, shark: YouthShark) {
-    val sy = shark.y
-    val sx = shark.x
+private fun dfs(map: Array<Array<Fish?>>, fishes: Array<Fish?>, shark: YouthShark) {
+    maxScore = max(maxScore, shark.score)
 
-    val fish = map[sy][sx]
-
-    if (fish == null) {
-        maxScore = maxOf(maxScore, shark.score)
-        return
-    }
-
-    shark.dir = fish.dir
-    shark.score += fish.id
-
-    map[sy][sx] = null
-    fishes[fish.id] = null
-
-    moveFishes(map, fishes, shark)
-
-    val dir = shark.dir
-
-    for (d in 1 until 4) {
-        val ny = sy + (dy[dir] * d)
-        val nx = sx + (dx[dir] * d)
-
-        if (ny in 0 until n && nx in 0 until n && map[ny][nx] != null) {
-            val newFishes = fishCopy(fishes)
-            val newMap = mapCopy(newFishes)
-
-            backTracking(newMap, newFishes, YouthShark(ny, nx, dir, shark.score))
-        } else {
-            maxScore = maxOf(maxScore, shark.score)
-        }
-    }
-}
-
-private fun fishCopy(fishes: Array<Fish?>) = Array(17) { fishes[it]?.copy() }
-private fun mapCopy(fishes: Array<Fish?>): Array<Array<Fish?>> {
-    val map: Array<Array<Fish?>> = Array(n) { Array(n) { null } }
     fishes.forEach { fish ->
-        if (fish != null) {
-            map[fish.y][fish.x] = fish
-        }
+        fish?.move(map, shark.y, shark.x)
     }
-    return map
-}
 
-private fun moveFishes(map: Array<Array<Fish?>>, fishes: Array<Fish?>, shark: YouthShark) {
-    fishes.forEach { fish ->
-        fish?.swap(map, shark.y, shark.x)
+    for (dist in 1..3) {
+        val ny = shark.y + dy[shark.dir] * dist
+        val nx = shark.x + dx[shark.dir] * dist
+
+        if (ny !in 0 until 4 || nx !in 0 until 4) continue
+
+        val targetFish = map[ny][nx] ?: continue
+
+        val nextFishes = Array(17) { fishes[it]?.copy() }
+        val nextMap = Array(4) { Array<Fish?>(4) { null } }
+
+        nextFishes.forEach { fish ->
+            if (fish != null) nextMap[fish.y][fish.x] = fish
+        }
+
+        nextMap[ny][nx] = null
+        nextFishes[targetFish.id] = null
+
+        dfs(nextMap, nextFishes, YouthShark(ny, nx, targetFish.dir, shark.score + targetFish.id))
     }
 }
