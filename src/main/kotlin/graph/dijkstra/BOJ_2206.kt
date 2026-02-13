@@ -1,28 +1,21 @@
 package graph.dijkstra
 
-import java.util.PriorityQueue
 import java.util.StringTokenizer
+import kotlin.collections.ArrayDeque
 
 private class Node5(
     val y: Int,
     val x: Int,
     var broken: Int,
     val time: Int
-) : Comparable<Node5> {
-    override fun compareTo(other: Node5) = time - other.time
-}
+)
 
 fun main() = System.`in`.bufferedReader().use { br ->
     val (n, m, k) = StringTokenizer(br.readLine()).run {
          Triple(nextToken().toInt(), nextToken().toInt(), nextToken().toInt())
     }
 
-    val map = Array(n) {
-        val line = br.readLine().toCharArray()
-        CharArray(m) {
-            line[it]
-        }
-    }
+    val map = Array(n) { br.readLine().toCharArray() }
 
     println(dijkstra(map, n, m, k))
 }
@@ -34,41 +27,38 @@ private const val EMPTY = '0'
 private const val WALL = '1'
 
 private fun dijkstra(map: Array<CharArray>, n: Int, m: Int, k: Int): Int {
-    val dist = Array(n) { Array(m) { IntArray(k + 1) { Int.MAX_VALUE } } }
-    val pq = PriorityQueue<Node5>()
+    if (n == 1 && m == 1) return 1
 
-    pq.add(Node5(0, 0, 0, 1))
+    val visited = Array(n) { Array(m) { BooleanArray(k + 1) } }
+    val deque = ArrayDeque<Node5>()
 
-    while (pq.isNotEmpty()) {
-        val cur = pq.poll()
-        val y = cur.y
-        val x = cur.x
-        val broken = cur.broken
-        val time = cur.time
+    deque.add(Node5(0, 0, 0, 1))
+    visited[0][0][0] = true
 
-        if (dist[y][x][broken] < time) continue
-        if (y == n - 1 && x == m - 1) return time
+    while (deque.isNotEmpty()) {
+        val cur = deque.removeFirst()
 
-        for (dir in 0 until 4) {
-            val ny = y + dy[dir]
-            val nx = x + dx[dir]
+        if (cur.y == n - 1 && cur.x == m - 1) return cur.time
+
+        for (i in 0 until 4) {
+            val ny = cur.y + dy[i]
+            val nx = cur.x + dx[i]
 
             if (ny in 0 until n && nx in 0 until m) {
                 val next = map[ny][nx]
-                val nextTime = time + 1
+                val nextTime = cur.time + 1
 
-                when (next) {
+                when(next) {
                     EMPTY -> {
-                        if (dist[ny][nx][broken] > nextTime) {
-                            dist[ny][nx][broken] = nextTime
-                            pq.add(Node5(ny, nx, broken, nextTime))
+                        if (!visited[ny][nx][cur.broken]) {
+                            visited[ny][nx][cur.broken] = true
+                            deque.add(Node5(ny, nx, cur.broken, nextTime))
                         }
                     }
                     WALL -> {
-                        val nextBroken = broken + 1
-                        if (broken < k && dist[ny][nx][nextBroken] > nextTime) {
-                            dist[ny][nx][nextBroken] = nextTime
-                            pq.add(Node5(ny, nx, nextBroken, nextTime))
+                        if (cur.broken < k && !visited[ny][nx][cur.broken + 1]) {
+                            visited[ny][nx][cur.broken + 1] = true
+                            deque.add(Node5(ny, nx, cur.broken + 1, nextTime))
                         }
                     }
                 }
