@@ -1,22 +1,8 @@
 import java.util.PriorityQueue
 import java.util.StringTokenizer
+import kotlin.math.min
 
-private class Node6(
-    val cur: Int,
-    val total: Int,
-    val v1Pass: Boolean,
-    val v2Pass: Boolean,
-) : Comparable<Node6> {
-    val vPassCount: Int
-        get() = when {
-            !v1Pass && !v2Pass -> 0
-            v1Pass && !v2Pass -> 1
-            !v1Pass && v2Pass -> 2
-            else -> 3
-        }
-
-    override fun compareTo(other: Node6) = total - other.total
-}
+const val INF = 200_000_000
 
 fun main() = with(System.`in`.bufferedReader()) {
     val (n, e) = StringTokenizer(readLine()).run {
@@ -38,48 +24,45 @@ fun main() = with(System.`in`.bufferedReader()) {
         nextToken().toInt() to nextToken().toInt()
     }
 
-    println(
-        dijkstra(nodes, n, v1, v2)
-    )
+    val distFrom1 = dijkstra(nodes, n, 1)
+    val distFromV1 = dijkstra(nodes, n, v1)
+    val distFromV2 = dijkstra(nodes, n, v2)
+
+    val path1 = if (distFrom1[v1] != INF && distFromV1[v2] != INF && distFromV2[n] != INF) {
+        distFrom1[v1] + distFromV1[v2] + distFromV2[n]
+    } else INF
+
+    val path2 = if (distFrom1[v2] != INF && distFromV2[v1] != INF && distFromV1[n] != INF) {
+        distFrom1[v2] + distFromV2[v1] + distFromV1[n]
+    } else INF
+
+    val result = min(path1, path2)
+    println(if (result >= INF) -1 else result)
 
     close()
 }
 
-private fun dijkstra(nodes: Array<ArrayList<Pair<Int, Int>>>, n: Int, v1: Int, v2: Int): Int {
-    val dist = Array(4) { IntArray(n + 1) { Int.MAX_VALUE } }
-    dist[0][1] = 0
+private fun dijkstra(nodes: Array<ArrayList<Pair<Int, Int>>>, n: Int, start: Int): IntArray {
+    val dist = IntArray(n + 1) { INF }
+    dist[start] = 0
 
-    val pq = PriorityQueue<Node6>()
-    pq.add(Node6(1, 0, 1 == v1, 1 == v2))
+    val pq = PriorityQueue<Pair<Int, Int>>(compareBy { it.second })
+    pq.add(start to 0)
 
     while (pq.isNotEmpty()) {
-        val node = pq.poll()
-        val cur = node.cur
-        val vPassCount = node.vPassCount
-        val v1Pass = node.v1Pass
-        val v2Pass = node.v2Pass
-        val total = node.total
+        val (cur, total) = pq.poll()
 
-        if (dist[vPassCount][cur] < total) continue
-        if (node.v1Pass && node.v2Pass && cur == n) return total
+        if (dist[cur] < total) continue
 
         for ((target, weight) in nodes[cur]) {
-            val nextV1Pass = v1Pass || target == v1
-            val nextV2Pass = v2Pass || target == v2
-            val nextVPassCount = when {
-                !nextV1Pass && !nextV2Pass -> 0
-                nextV1Pass && !nextV2Pass -> 1
-                !nextV1Pass && nextV2Pass -> 2
-                else -> 3
-            }
             val nextWeight = total + weight
 
-            if (dist[nextVPassCount][target] > nextWeight) {
-                dist[nextVPassCount][target] = nextWeight
-                pq.add(Node6(target, nextWeight, nextV1Pass, nextV2Pass))
+            if (dist[target] > nextWeight) {
+                dist[target] = nextWeight
+                pq.add(target to nextWeight)
             }
         }
     }
 
-    return -1
+    return dist
 }
