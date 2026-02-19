@@ -4,7 +4,7 @@ import java.util.PriorityQueue
 import java.util.StringTokenizer
 import kotlin.math.min
 
-const val INF = 200_000_000
+private const val INF = 200_000_000
 
 fun main() = with(System.`in`.bufferedReader()) {
     val (n, e) = StringTokenizer(readLine()).run {
