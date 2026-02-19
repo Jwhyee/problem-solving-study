@@ -21,8 +21,8 @@ fun main() = with(System.`in`.bufferedReader()) {
 
     var sum = 0L
     for (j in n - 1 downTo 0) {
-        prefixes[j] = sum
         sum += villages[j].people
+        prefixes[j] = sum
     }
 
     var max = 0L
