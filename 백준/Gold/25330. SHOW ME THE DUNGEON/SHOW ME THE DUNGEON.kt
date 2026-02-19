@@ -17,6 +17,14 @@ fun main() = with(System.`in`.bufferedReader()) {
 
     villages.sortBy { it.monsterAtk }
 
+    val prefixes = LongArray(n) { 0 }
+
+    var sum = 0L
+    for (j in n - 1 downTo 0) {
+        prefixes[j] = sum
+        sum += villages[j].people
+    }
+
     var max = 0L
 
     fun backtracking(hp: Int, prefix: Int, cur: Int, saved: Long) {
@@ -24,6 +32,7 @@ fun main() = with(System.`in`.bufferedReader()) {
 
         if (hp <= 0) return
         if (cur == n) return
+        if (max > saved + prefixes[cur]) return
 
         val (monsterAtk, people) = villages[cur]
         val p = prefix + monsterAtk
